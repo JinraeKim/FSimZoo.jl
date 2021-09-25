@@ -13,10 +13,6 @@ using StaticArrays
 using MatrixEquations
 using ForwardDiff
 
-# APIs
-export State, Params, Dynamics!
-export Command
-
 ## basics
 export TwoDimensionalNonlinearPolynomialEnv, LinearSystemEnv, ReferenceModelEnv, MultipleEnvs
 ## controllers
@@ -28,6 +24,8 @@ export HexacopterEnv, LeeHexacopterEnv
 # control allocator
 export AbstractAllocator, StaticAllocator
 export PseudoInverseAllocator
+# integrated environments
+export BacksteppingPositionController_StaticAllocator_MulticopterEnv
 
 
 include("environments/environments.jl")
