@@ -1,7 +1,7 @@
 module FSimZoo
 
-import FSimBase: AbstractEnv, State, Params, Dynamics!
-import FSimBase: AbstractController, Command
+import FSimBase: State, Params, Dynamics!
+import FSimBase: Command
 using FSimBase
 # using Reexport
 # @reexport using FSimBase
@@ -13,6 +13,9 @@ using StaticArrays
 using MatrixEquations
 using ForwardDiff
 
+# APIs
+export State, Params, Dynamics!
+export Command
 
 ## basics
 export TwoDimensionalNonlinearPolynomialEnv, LinearSystemEnv, ReferenceModelEnv, MultipleEnvs
