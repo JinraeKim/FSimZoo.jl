@@ -3,15 +3,13 @@ module FSimZoo
 import FSimBase: State, Params, Dynamics!
 import FSimBase: Command
 using FSimBase
-# using Reexport
-# @reexport using FSimBase
 
-using UnPack
 using ComponentArrays
-using LinearAlgebra
-using StaticArrays
-using MatrixEquations
 using ForwardDiff
+using MatrixEquations
+using StaticArrays
+using UnPack
+using LinearAlgebra
 
 ## basics
 export TwoDimensionalNonlinearPolynomialEnv, LinearSystemEnv, ReferenceModelEnv, MultipleEnvs
