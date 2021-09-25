@@ -36,7 +36,7 @@ function Dynamics!(env::BacksteppingPositionController_StaticAllocator_Multicopt
                                            xd, vd, ad, ȧd, äd, Td,
                                            m, J, g,
                                           )
-        u_cmd = allocator(νd)
+        u_cmd = Command(allocator)(νd)
         @nested_log :multicopter FlightSims._Dynamics!(multicopter)(dx.multicopter, x.multicopter, (), t; u=u_cmd)
         @nested_log :controller Dynamics!(controller)(dx.controller, x.controller, (), t; pos_cmd=pos_cmd, Ṫd=Ṫd)
         @nested_log :controller νd
