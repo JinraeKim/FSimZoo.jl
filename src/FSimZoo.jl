@@ -1,7 +1,10 @@
 module FSimZoo
 
+import FSimBase: AbstractEnv, State, Params, Dynamics!
+import FSimBase: AbstractController, Command
 using FSimBase
-import FSimBase: State, Params, Dynamics!, Command
+# using Reexport
+# @reexport using FSimBase
 
 using UnPack
 using ComponentArrays
