@@ -7,6 +7,8 @@ using UnPack
 using ComponentArrays
 using LinearAlgebra
 using StaticArrays
+using MatrixEquations
+using ForwardDiff
 
 
 ## basics
