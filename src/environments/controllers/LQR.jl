@@ -42,6 +42,6 @@ end
 function solutions(lqr::LQR)
     P = ARE_solution(lqr)
     K = optimal_gain(lqr)
-    optimal_controller = OptimalController(lqr)
+    optimal_controller = Command(lqr)
     P, K, optimal_controller
 end
