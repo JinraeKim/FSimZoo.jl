@@ -27,5 +27,6 @@ export BacksteppingPositionController_StaticAllocator_MulticopterEnv
 
 
 include("environments/environments.jl")
+include("utils/utils.jl")
 
 end
