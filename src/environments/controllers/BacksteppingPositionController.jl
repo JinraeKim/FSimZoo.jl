@@ -23,7 +23,7 @@ struct BacksteppingPositionController <: AbstractEnv
     Kω
     function BacksteppingPositionController(m::Real; pos_cmd_func=nothing)
         @assert m > 0
-        Ref_model = ReferenceModelEnv(4; x_cmd_func=pos_cmd_func)
+        Ref_model = ReferenceModel(4; x_cmd_func=pos_cmd_func)
         # position
         Kx = m*1*Matrix(I, 3, 3)
         Kv = m*1*1.82*Matrix(I, 3, 3)
