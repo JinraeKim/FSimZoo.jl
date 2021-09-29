@@ -1,19 +1,19 @@
-struct BacksteppingPositionController_StaticAllocator_MulticopterEnv <: AbstractEnv
-    controller::BacksteppingPositionControllerEnv
+struct BacksteppingPositionController_StaticAllocator_Multicopter <: AbstractEnv
+    controller::BacksteppingPositionController
     allocator::StaticAllocator
-    multicopter::MulticopterEnv
+    multicopter::Multicopter
 end
 
 # outer constructor
-function BacksteppingPositionController_StaticAllocator_MulticopterEnv(pos_cmd_func=nothing)
-    multicopter = LeeHexacopterEnv()
+function BacksteppingPositionController_StaticAllocator_Multicopter(pos_cmd_func=nothing)
+    multicopter = LeeHexacopter()
     @unpack m, B = multicopter
-    controller = BacksteppingPositionControllerEnv(m; pos_cmd_func=pos_cmd_func)
+    controller = BacksteppingPositionController(m; pos_cmd_func=pos_cmd_func)
     allocator = PseudoInverseAllocator(B)
-    env = BacksteppingPositionController_StaticAllocator_MulticopterEnv(controller, allocator, multicopter)
+    env = BacksteppingPositionController_StaticAllocator_Multicopter(controller, allocator, multicopter)
 end
 
-function State(env::BacksteppingPositionController_StaticAllocator_MulticopterEnv)
+function State(env::BacksteppingPositionController_StaticAllocator_Multicopter)
     @unpack controller, allocator, multicopter = env
     @unpack m, g = multicopter
     function state(; args_multicopter=())
@@ -24,7 +24,7 @@ function State(env::BacksteppingPositionController_StaticAllocator_MulticopterEn
     end
 end
 
-function Dynamics!(env::BacksteppingPositionController_StaticAllocator_MulticopterEnv)
+function Dynamics!(env::BacksteppingPositionController_StaticAllocator_Multicopter)
     @unpack controller, allocator, multicopter = env
     @unpack m, J, g = multicopter
     @Loggable function dynamics!(dx, x, params, t; pos_cmd=nothing)

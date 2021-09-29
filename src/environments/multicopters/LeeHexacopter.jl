@@ -9,7 +9,7 @@ in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010, p
 # Variables
 u ∈ R^6: rotor forces
 """
-Base.@kwdef struct LeeHexacopterEnv <: HexacopterEnv
+Base.@kwdef struct LeeHexacopter <: Hexacopter
     J = diagm([0.0820, 0.0845, 0.1377])  # kg m^2
     l = 0.315  # m
     kM = 8.004e-4  # m s^2
@@ -25,16 +25,16 @@ Base.@kwdef struct LeeHexacopterEnv <: HexacopterEnv
     u_max = (m*g) * ones(dim_input)
 end
 
-function saturate(multicopter::LeeHexacopterEnv, u)
+function saturate(multicopter::LeeHexacopter, u)
     @unpack u_min, u_max = multicopter
     u_saturated = clamp.(u, u_min, u_max)
 end
 
-function input_to_force_moment(multicopter::LeeHexacopterEnv, u)
+function input_to_force_moment(multicopter::LeeHexacopter, u)
     @unpack B = multicopter
     ν = B * u
 end
 
-function airframe_reference(multicopter::LeeHexacopterEnv)
+function airframe_reference(multicopter::LeeHexacopter)
     :hexa_x
 end

@@ -1,10 +1,10 @@
 # multicopter
-abstract type MulticopterEnv <: AbstractEnv end
+abstract type Multicopter <: AbstractEnv end
 
 """
-Common state structure of MulticopterEnv
+Common state structure of Multicopter
 """
-function State(multicopter::MulticopterEnv)
+function State(multicopter::Multicopter)
     return function (p=zeros(3), v=zeros(3), R=SMatrix{3, 3}(I), ω=zeros(3))
         ComponentArray(p=p, v=v, R=R, ω=ω)
     end
@@ -13,7 +13,7 @@ end
 """
 Common input saturation (default: not applied)
 """
-function saturate(multicopter::MulticopterEnv, u)
+function saturate(multicopter::Multicopter, u)
     # u
     error("Actuator saturation not applied: `saturate`")
 end
@@ -21,7 +21,7 @@ end
 """
 Common input to force and moment transformation (default: not applied)
 """
-function input_to_force_moment(multicopter::MulticopterEnv, u)
+function input_to_force_moment(multicopter::Multicopter, u)
     # ν = u
     error("Transformation of input to force and moment not defined: `input_to_force_moment`")
 end
@@ -51,7 +51,7 @@ It is because many packages including `ReferenceFrameRotations.jl` follows the d
 # Reference
 [1] T. Lee, M. Leok, and N. H. McClamroch, “Geometric Tracking Control of a Quadrotor UAV on SE(3),” in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010, pp. 5420–5425. doi: 10.1109/CDC.2010.5717652.
 """
-function __Dynamics!(multicopter::MulticopterEnv)
+function __Dynamics!(multicopter::Multicopter)
     @unpack m, g, J = multicopter
     J_inv = inv(J)
     e3 = [0, 0, 1]
@@ -76,7 +76,7 @@ A basic example of dynamics for multicopter considering rotor inputs `u`.
 You can use the following closure or extend the abvoe __Dynamics! for more general
 models, e.g., faulted multicopters.
 """
-function _Dynamics!(multicopter::MulticopterEnv)
+function _Dynamics!(multicopter::Multicopter)
     @Loggable function dynamics!(dx, x, p, t; u)
         @nested_onlylog :input u_cmd = u
         @nested_log :input u_saturated = saturate(multicopter, u)

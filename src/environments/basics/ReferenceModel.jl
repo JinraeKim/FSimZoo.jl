@@ -7,13 +7,13 @@ d: degree of the reference model
 auto_diff: auto_diff = true for tracking time-varying command; otherwise for set-point regulation
 x_cmd_func(t): function of time
 """
-struct ReferenceModelEnv <: AbstractEnv
+struct ReferenceModel <: AbstractEnv
     d::Int  # degree
     Ks::AbstractArray
     auto_diff::Bool
     x_cmd_func::Union{Function, Nothing}
 end
-function ReferenceModelEnv(d::Int; x_cmd_func=nothing)
+function ReferenceModel(d::Int; x_cmd_func=nothing)
     @assert d >= 0
     Ks = []
     if d == 4
@@ -26,13 +26,13 @@ function ReferenceModelEnv(d::Int; x_cmd_func=nothing)
         error("Assign values of matrix `Kx` manually")
     end
     auto_diff = x_cmd_func == nothing ? false : true
-    ReferenceModelEnv(d, Ks, auto_diff, x_cmd_func)
+    ReferenceModel(d, Ks, auto_diff, x_cmd_func)
 end
 
 """
 `x_i` denotes `i`th (time) derivative of `x`
 """
-function State(env::ReferenceModelEnv)
+function State(env::ReferenceModel)
     @unpack d = env
     return function (x0)
         xs_dict = Dict(:x_0 => x0)
@@ -43,7 +43,7 @@ function State(env::ReferenceModelEnv)
     end
 end
 
-function Dynamics!(env::ReferenceModelEnv)
+function Dynamics!(env::ReferenceModel)
     @unpack d, Ks, auto_diff, x_cmd_func = env
     # derivatives for auto_diff
     funcs = nothing

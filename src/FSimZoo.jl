@@ -12,18 +12,18 @@ using UnPack
 using LinearAlgebra
 
 ## basics
-export TwoDimensionalNonlinearPolynomialEnv, LinearSystemEnv, ReferenceModelEnv, MultipleEnvs
+export TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
 ## controllers
-export LQR, PID, BacksteppingPositionControllerEnv
+export LQR, PID, BacksteppingPositionController
 ## multicopters
-export MulticopterEnv
-export QuadcopterEnv, IslamQuadcopterEnv, GoodarziQuadcopterEnv
-export HexacopterEnv, LeeHexacopterEnv
+export Multicopter
+export Quadcopter, IslamQuadcopter, GoodarziQuadcopter
+export Hexacopter, LeeHexacopter
 # control allocator
 export AbstractAllocator, StaticAllocator
 export PseudoInverseAllocator
 # integrated environments
-export BacksteppingPositionController_StaticAllocator_MulticopterEnv
+export BacksteppingPositionController_StaticAllocator_Multicopter
 
 ## utils
 export ned2enu, enu2ned

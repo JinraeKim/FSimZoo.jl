@@ -4,7 +4,7 @@
 # Variables
 u ∈ R^4: square of rotor angular speed
 """
-Base.@kwdef struct IslamQuadcopterEnv <: QuadcopterEnv
+Base.@kwdef struct IslamQuadcopter <: Quadcopter
     J = Diagonal([7.5e-3, 7.5e-3, 1.3e-2])  # kg m^2
     l = 0.23  # m
     kf = 3.13e-5  # N s^2
@@ -24,12 +24,12 @@ Base.@kwdef struct IslamQuadcopterEnv <: QuadcopterEnv
     u_max = (m*g/kf) * ones(dim_input)
 end
 
-function saturate(env::IslamQuadcopterEnv, u)
+function saturate(env::IslamQuadcopter, u)
     @unpack u_min, u_max = env
     u_saturated = clamp.(u, u_min, u_max)
 end
 
-function input_to_force_moment(env::IslamQuadcopterEnv, u)
+function input_to_force_moment(env::IslamQuadcopter, u)
     @unpack B = env
     ν = B * u
 end

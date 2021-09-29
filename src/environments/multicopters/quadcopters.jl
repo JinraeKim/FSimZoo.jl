@@ -1,4 +1,4 @@
-abstract type QuadcopterEnv <: MulticopterEnv end
+abstract type Quadcopter <: Multicopter end
 
-include("GoodarziQuadcopterEnv.jl")
-include("IslamQuadcopterEnv.jl")
+include("GoodarziQuadcopter.jl")
+include("IslamQuadcopter.jl")
