@@ -1,4 +1,4 @@
-# QuadcopterEnv
+# Quadcopter
 """
 # References
 [1] F. A. Goodarzi, D. Lee, and T. Lee,
@@ -11,7 +11,7 @@ R ∈ so(3): inertial-to-body rotation matrix (R_I2B)
 ω ∈ R^3: angular rate of body in inertial frame
 u ∈ R^4: [f, M...] where f ∈ R: total thrust, M ∈ R^3: moment
 """
-Base.@kwdef struct GoodarziQuadcopterEnv <: QuadcopterEnv
+Base.@kwdef struct GoodarziQuadcopter <: Quadcopter
     m = 0.5  # kg
     J = 1e-2 * Diagonal([0.557, 0.557, 1.050])  # kg m²
     J_inv = inv(J)
@@ -22,11 +22,11 @@ Base.@kwdef struct GoodarziQuadcopterEnv <: QuadcopterEnv
     u_max = (m*g) * ones(dim_input)
 end
 
-function saturate(env::GoodarziQuadcopterEnv, u)
+function saturate(env::GoodarziQuadcopter, u)
     @unpack u_min, u_max = env
     u_saturated = clamp.(u, u_min, u_max)
 end
 
-function input_to_force_moment(env::GoodarziQuadcopterEnv, u)
+function input_to_force_moment(env::GoodarziQuadcopter, u)
     ν = u
 end

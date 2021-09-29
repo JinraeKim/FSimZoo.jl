@@ -9,11 +9,11 @@ Proc. Am. Control Conf., vol. 2016-July, pp. 6760–6766, 2016.
 
 # NOTICE
 - (Tracking control) Add the argument `pos_cmd_func` (a function of time such that (t) -> position(t) ∈ ℝ^3) of constructor,
-please do not add the argument `pos_cmd` in the inner function of `Dynamics!(env::BacksteppingPositionControllerEnv)`.
+please do not add the argument `pos_cmd` in the inner function of `Dynamics!(env::BacksteppingPositionController)`.
 - (Set-point control) Do not add the argument `pos_cmd_func` (a function of time such that (t) -> position(t) ∈ ℝ^3) of constructor,
-please add the argument `pos_cmd` in the inner function of `Dynamics!(env::BacksteppingPositionControllerEnv)`.
+please add the argument `pos_cmd` in the inner function of `Dynamics!(env::BacksteppingPositionController)`.
 """
-struct BacksteppingPositionControllerEnv <: AbstractEnv
+struct BacksteppingPositionController <: AbstractEnv
     Ref_model
     Ap
     Bp
@@ -21,7 +21,7 @@ struct BacksteppingPositionControllerEnv <: AbstractEnv
     Kp
     Kt
     Kω
-    function BacksteppingPositionControllerEnv(m::Real; pos_cmd_func=nothing)
+    function BacksteppingPositionController(m::Real; pos_cmd_func=nothing)
         @assert m > 0
         Ref_model = ReferenceModelEnv(4; x_cmd_func=pos_cmd_func)
         # position
@@ -52,7 +52,7 @@ ref_model.x_2 = ad
 ref_model.x_3 = ȧd
 ref_model.x_4 = äd
 """
-function State(controller::BacksteppingPositionControllerEnv)
+function State(controller::BacksteppingPositionController)
     @unpack Ref_model = controller
     return function (pos0, m, g)
         @assert m > 0
@@ -62,7 +62,7 @@ function State(controller::BacksteppingPositionControllerEnv)
     end
 end
 
-function Dynamics!(controller::BacksteppingPositionControllerEnv)
+function Dynamics!(controller::BacksteppingPositionController)
     @unpack Ref_model = controller
     @Loggable function dynamics!(dX, X, p, t; pos_cmd=nothing, Ṫd)
         @log state = X
@@ -76,7 +76,7 @@ end
 """
 Several functions are exported from `utils.jl`, e.g., T_u_inv(T).
 """
-function Command(controller::BacksteppingPositionControllerEnv)
+function Command(controller::BacksteppingPositionController)
     @unpack Ap, Bp, P, Kp, Kt, Kω = controller
     T_u_inv(T) = [   0 1/T  0;
                   -1/T   0  0;

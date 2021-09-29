@@ -1,9 +1,9 @@
-struct LinearSystemEnv <: AbstractEnv
+struct LinearSystem <: AbstractEnv
     A
     B
 end
 
-function State(env::LinearSystemEnv)
+function State(env::LinearSystem)
     @unpack B = env
     n = size(B)[1]
     return function (x)
@@ -12,11 +12,11 @@ function State(env::LinearSystemEnv)
     end
 end
 
-function Params(env::LinearSystemEnv)
+function Params(env::LinearSystem)
     () -> nothing
 end
 
-function Dynamics!(env::LinearSystemEnv)
+function Dynamics!(env::LinearSystem)
     @unpack A, B = env
     @Loggable function dynamics!(dx, x, p, t; u)
         @log state = x
