@@ -6,7 +6,7 @@ end
 
 # outer constructor
 function BacksteppingPositionController_StaticAllocator_Multicopter(pos_cmd_func=nothing)
-    multicopter = LeeHexacopterEnv()
+    multicopter = LeeHexacopter()
     @unpack m, B = multicopter
     controller = BacksteppingPositionController(m; pos_cmd_func=pos_cmd_func)
     allocator = PseudoInverseAllocator(B)
