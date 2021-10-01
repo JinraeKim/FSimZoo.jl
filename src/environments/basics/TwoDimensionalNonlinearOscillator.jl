@@ -20,13 +20,12 @@ function Dynamics!(env::TwoDimensionalNonlinearOscillator)
         @log state = x
         @log input = u
         dx.x1 = x2
-        dx.x2 = -x1 * (
-                       π/2
-                       + atan(5*x1)
-                       - (5*x1^2)/(2*(1+25*x1^2))
-                       + 4*x2
-                       + 3*u
-                      )
+        dx.x2 = (
+                 -x1 * (π/2 + atan(5*x1))
+                 - (5*x1^2)/(2*(1+25*x1^2))
+                 + 4*x2
+                 + 3*u
+                )
     end
 end
 
