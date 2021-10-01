@@ -22,7 +22,7 @@ function Dynamics!(env::TwoDimensionalNonlinearPolynomialSystem)
     end
 end
 
-function OptimalController(env::TwoDimensionalNonlinearPolynomialSystem)
+function OptimalControl(env::TwoDimensionalNonlinearPolynomialSystem)
     return function (x::ComponentArray, p, t)
         @unpack x1, x2 = x
         -x2
