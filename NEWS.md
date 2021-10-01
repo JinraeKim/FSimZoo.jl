@@ -1,3 +1,6 @@
+# Changes in v0.3.0
+- `TwoDimensionalNonlinearOscillator` is added.
+
 # Changes in v0.2.0
 - Predefined stuffs' names are changed.
 
