@@ -12,7 +12,7 @@ using UnPack
 using LinearAlgebra
 
 ## basics
-export TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
+export ConstantSystem, TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
 export TwoDimensionalNonlinearOscillator
 ## controllers
 export LQR, PID, BacksteppingPositionController

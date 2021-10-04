@@ -13,6 +13,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     <details>
     <summary>basics</summary>
 
+    - (Constant system) `ConstantSystem`
     - (Linear system) `LinearSystem`
     - (Reference model) `ReferenceModel`
     - (Nonlinear polynomial system) `TwoDimensionalNonlinearPolynomialSystem`
