@@ -5,7 +5,7 @@ Note that the system is constructed by converse HJB method [2].
 [1] 
 [2]
 """
-struct TwoDimensionalNonlinearOscillator
+struct TwoDimensionalNonlinearOscillator <: AbstractEnv
 end
 
 function State(env::TwoDimensionalNonlinearOscillator)
