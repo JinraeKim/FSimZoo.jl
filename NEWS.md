@@ -1,3 +1,5 @@
+# Changes in v0.3.1
+- Bug fix: `TwoDimensionalNonlinearOscillator <: AbstractEnv`
 # Changes in v0.3.0
 - `TwoDimensionalNonlinearOscillator` is added.
 
