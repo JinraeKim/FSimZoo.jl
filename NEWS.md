@@ -1,5 +1,5 @@
 # Changes in v0.3.2
-- Environments are added and made to be loggable (thanks to @hnlee77 !).
+- Environments are added and made to be loggable (thanks to [@hnlee77](https://github.com/hnlee77)!).
     - `SingleIntegrator`
     - `LinearSystem_SingleIntegrator`
 
