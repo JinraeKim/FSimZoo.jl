@@ -12,9 +12,10 @@ function State(env::SingleIntegrator)
 end
 
 function Dynamics!(env::SingleIntegrator)
-    return function (dx, x, p, t; u)
+    @Loggable function dynamics!(dx, x, p, t; u)
         @assert length(dx) == length(u)
+        @log integral = x
+        @log integrand = u
         dx .= u
-        nothing
     end
 end
