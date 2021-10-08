@@ -14,6 +14,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     <summary>basics</summary>
 
     - (Linear system) `LinearSystem`
+    - (A simple integrator) `SingleIntegrator`
     - (Reference model) `ReferenceModel`
     - (Nonlinear polynomial system) `TwoDimensionalNonlinearPolynomialSystem`
         - [T. Bian and Z.-P. Jiang, “Value Iteration, Adaptive Dynamic Programming, and Optimal Control of Nonlinear Systems,” in 2016 IEEE 55th Conference on Decision and Control (CDC), Las Vegas, NV, USA, Dec. 2016, pp. 3375–3380. doi: 10.1109/CDC.2016.7798777.](https://ieeexplore.ieee.org/document/7798777)
@@ -53,6 +54,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
 
     - (Backstepping Position Controller + Static Allocator + Multicopter) `BacksteppingPositionController_StaticAllocator_Multicopter`
         - For example, `BacksteppingPositionController` (backstepping position controller) + `PseudoInverseAllocator` (pseudo-inverse allocator, a static allocator) + `LeeHexacopter` (hexacopter, a multicopter)
+    - (Linear system + single integrator) `LinearSystem_SingleIntegrator` (WIP)
     - See `src/environments/integrated_environments`.
 
     </details>

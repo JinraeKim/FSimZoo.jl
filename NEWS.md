@@ -1,5 +1,11 @@
+# Changes in v0.3.2
+- Environments are added and made to be loggable (thanks to @hnlee77 !).
+    - `SingleIntegrator`
+    - `LinearSystem_SingleIntegrator`
+
 # Changes in v0.3.1
 - Bug fix: `TwoDimensionalNonlinearOscillator <: AbstractEnv`
+
 # Changes in v0.3.0
 - `TwoDimensionalNonlinearOscillator` is added.
 
