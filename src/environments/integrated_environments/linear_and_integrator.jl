@@ -24,11 +24,10 @@ end
 running_cost: integrand; function of (x, u)
 """
 function Dynamics!(linearsystem::LinearSystem, integ::SingleIntegrator, running_cost::Function)
-    return function (dX, X, p, t; u)
+    @Loggable function dynamics!(dX, X, p, t; u)
         @unpack x = X
-        Dynamics!(linearsystem)(dX.x, X.x, (), t; u=u)
+        @nested_log :linearsystem Dynamics!(linearsystem)(dX.x, X.x, nothing, t; u=u)
         r = running_cost(x, u)
-        Dynamics!(integ)(dX.∫r, X.∫r, (), t; u=r)
-        nothing
+        @nested_log :integ Dynamics!(integ)(dX.∫r, X.∫r, nothing, t; u=r)
     end
 end
