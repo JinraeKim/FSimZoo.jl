@@ -28,6 +28,6 @@ function Dynamics!(linearsystem::LinearSystem, integ::SingleIntegrator, running_
         @unpack x = X
         @nested_log :linearsystem Dynamics!(linearsystem)(dX.x, X.x, nothing, t; u=u)
         r = running_cost(x, u)
-        @nested_log :integ Dynamics!(integ)(dX.∫r, X.∫r, (), t; u=r)
+        @nested_log :integ Dynamics!(integ)(dX.∫r, X.∫r, nothing, t; u=r)
     end
 end
