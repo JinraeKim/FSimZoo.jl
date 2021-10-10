@@ -1,3 +1,6 @@
+# Changes in v0.3.3
+- The interface of `TwoDimensionalNonlinearOscillator` has been changed; the input `u` is now an `Array`, e.g., `[1.0]`, not a `Number`.
+
 # Changes in v0.3.2
 - Environments are added and made to be loggable (thanks to [@hnlee77](https://github.com/hnlee77)!).
     - `SingleIntegrator`
