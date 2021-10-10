@@ -50,6 +50,6 @@ end
 function OptimalControl(env::TwoDimensionalNonlinearOscillator)
     return function (x)
         @unpack x1, x2 = x
-        u_star = -3*x2
+        u_star = [-3*x2]  # make it vector
     end
 end
