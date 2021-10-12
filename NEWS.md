@@ -1,3 +1,6 @@
+# Changes in v0.3.4
+- `TwoDimensionalNonlinearPolynomialSystem` is now `@Loggable`.
+
 # Changes in v0.3.3
 - The interface of `TwoDimensionalNonlinearOscillator` has been changed; the input `u` is now an `Array`, e.g., `[1.0]`, not a `Number`.
 
