@@ -12,8 +12,10 @@ function State(env::TwoDimensionalNonlinearPolynomialSystem)
 end
 
 function Dynamics!(env::TwoDimensionalNonlinearPolynomialSystem)
-    return function (dx, x, p, t; u)
+    @Loggable function dynamics!(dx, x, p, t; u)
         @assert length(u) == 1
+        @log state = x
+        @log input = u
         _u = u[1]  # Real or Array
         @unpack x1, x2 = x
         dx.x1 = -(1/2)*x1^3 - x1 - 2*x2
