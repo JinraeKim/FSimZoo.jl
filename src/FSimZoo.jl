@@ -14,6 +14,7 @@ using LinearAlgebra
 ## basics
 export TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
 export TwoDimensionalNonlinearOscillator, SingleIntegrator
+export TwoDimensionalNonlinearDTSystem
 ## controllers
 export LQR, PID, BacksteppingPositionController
 ## multicopters
