@@ -23,18 +23,20 @@ function Dynamics!(env::TwoDimensionalNonlinearDTSystem)
     end
 end
 
-function __cubic_sol(x)
-    a = (
-         (cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2) / 3^(2/3))
-         - (2 / (cbrt(3) * cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2)))
-        )  # solve a^3 + 2a - 2*c*x2 for a ∈ ℝ
+function CubicSolution(env::TwoDimensionalNonlinearDTSystem)
+    return function (x)
+        a = (
+             (cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2) / 3^(2/3))
+             - (2 / (cbrt(3) * cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2)))
+            )  # solve a^3 + 2a - 2*c*x2 for a ∈ ℝ
+    end
 end
 
 function RunningCost(env::TwoDimensionalNonlinearDTSystem)
     @unpack c = env
     return function (x, u)
         @unpack x2 = x
-        a = __cubic_sol(x)
+        a = CubicSolution(env)(x)
         r = (
              (3/4)*a^4 + a^2 + x'*[(1-c^2) -c^2; -c^2 (1-2*c^2)]*x
              + (1/4)*u[1]^4
@@ -59,7 +61,7 @@ end
 
 function OptimalControl(env::TwoDimensionalNonlinearDTSystem)
     return function (x)
-        a = __cubic_sol(x)
+        a = CubicSolution(env)(x)
         -a
     end
 end
