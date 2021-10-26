@@ -3,7 +3,7 @@ A two dimensional nonlinear discrete time (DT) system.
 """
 
 Base.@kwdef struct TwoDimensionalNonlinearDTSystem <: AbstractEnv
-    c = 2/(1+sqrt(5))  # 1 / (golden ratio)
+    c = 0.75
     d = 1e-1
 end
 
@@ -26,8 +26,7 @@ end
 
 function CubicSolution(env::TwoDimensionalNonlinearDTSystem)
     @unpack c = env
-    return function (x)
-        @unpack x2 = x
+    return function (x2)
         a = (
              (cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2) / 3^(2/3))
              - (2 / (cbrt(3) * cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2)))
@@ -38,7 +37,8 @@ end
 function RunningCost(env::TwoDimensionalNonlinearDTSystem)
     @unpack c = env
     return function (x, u)
-        a = CubicSolution(env)(x)
+        @unpack x2 = x
+        a = CubicSolution(env)(x2)
         r = (
              (3/4)*a^4 + a^2 + x'*[(1-c^2) -c^2; -c^2 (1-2*c^2)]*x
              + (1/4)*u[1]^4
@@ -64,7 +64,8 @@ end
 
 function OptimalControl(env::TwoDimensionalNonlinearDTSystem)
     return function (x)
-        a = CubicSolution(env)(x)
+        @unpack x2 = x
+        a = CubicSolution(env)(x2)
         -a
     end
 end
