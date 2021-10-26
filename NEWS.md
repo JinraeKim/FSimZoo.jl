@@ -1,3 +1,6 @@
+# Changes in v0.3.5
+- A new discrete-time system, `TwoDimensionalNonlinearDTSystem`, is now added.
+
 # Changes in v0.3.4
 - `TwoDimensionalNonlinearPolynomialSystem` is now `@Loggable`.
 
