@@ -3,7 +3,7 @@ A two dimensional nonlinear discrete time (DT) system.
 """
 
 Base.@kwdef struct TwoDimensionalNonlinearDTSystem <: AbstractEnv
-    c = 0.95
+    c = 2/(1+sqrt(5))  # 1 / (golden ratio)
     d = 1e-1
 end
 
