@@ -3,7 +3,8 @@ A two dimensional nonlinear discrete time (DT) system.
 """
 
 Base.@kwdef struct TwoDimensionalNonlinearDTSystem <: AbstractEnv
-    c = 1/2
+    c = 0.95
+    d = 1e-1
 end
 
 function State(env::TwoDimensionalNonlinearDTSystem)
@@ -46,16 +47,17 @@ function RunningCost(env::TwoDimensionalNonlinearDTSystem)
 end
 
 function OptimalValue(env::TwoDimensionalNonlinearDTSystem)
+    @unpack d = env
     return function (x)
         @unpack x1, x2 = x
-        x1^2 + x2^2
+        d*(x1^2 + x2^2)
     end
 end
 
 function OptimalQValue(env::TwoDimensionalNonlinearDTSystem)
     return function (x, u)
         dx = copy(x)
-        Dynamics!(env)(dx, x, nothing, 0.0; u)
+        Dynamics!(env)(dx, x, nothing, 0.0; u=u)
         OptimalValue(env)(dx) + RunningCost(env)(x, u)
     end
 end
