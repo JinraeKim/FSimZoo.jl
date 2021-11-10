@@ -4,7 +4,7 @@ A two dimensional nonlinear discrete time (DT) system.
 
 Base.@kwdef struct TwoDimensionalNonlinearDTSystem <: AbstractEnv
     c = 0.5
-    d = 3.0
+    d = 1.0
 end
 
 function State(env::TwoDimensionalNonlinearDTSystem)
