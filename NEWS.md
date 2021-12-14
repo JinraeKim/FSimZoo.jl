@@ -1,4 +1,4 @@
-# Changes in v0.3.6
+# Changes in v0.3.7
 - `BacksteppingPositionController`'s transient response is improved (faster) by adjusting the parameters of reference model (`RefModel`)
 - `LeeHexacopter`'s rotor limit is changed following the reference (written in the code).
 
