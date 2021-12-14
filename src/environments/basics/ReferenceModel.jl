@@ -17,6 +17,7 @@ function ReferenceModel(d::Int; x_cmd_func=nothing)
     @assert d >= 0
     Ks = []
     if d == 4
+        # [1]
         push!(Ks, Diagonal(1.0*ones(3)))
         push!(Ks, Diagonal(3.4*ones(3)))
         push!(Ks, Diagonal(5.4*ones(3)))
