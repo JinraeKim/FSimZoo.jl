@@ -1,3 +1,7 @@
+# Changes in v0.3.6
+- `BacksteppingPositionController`'s transient response is improved (faster) by adjusting the parameters of reference model (`RefModel`)
+- `LeeHexacopter`'s rotor limit is changed following the reference (written in the code).
+
 # Changes in v0.3.5
 - A new discrete-time system, `TwoDimensionalNonlinearDTSystem`, is now added.
 
