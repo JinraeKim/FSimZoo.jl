@@ -14,7 +14,7 @@ u ∈ R^6: rotor forces
 Base.@kwdef struct LeeHexacopter <: Hexacopter
     J = diagm([0.0820, 0.0845, 0.1377])  # kg m^2
     l = 0.315  # m
-    kM = 8.004e-4  # m s^2
+    kM = 8.004e-4  # m
     m = 4.34  # kg
     g = 9.81  # m / s^2
     B = [ 1   1             1              1             1              1;
