@@ -21,7 +21,14 @@ struct BacksteppingPositionController <: AbstractEnv
     Kp
     Kt
     Kω
-    function BacksteppingPositionController(m::Real; pos_cmd_func=nothing)
+    function BacksteppingPositionController(
+            m::Real;
+            pos_cmd_func=nothing,
+            Kx=m*5*diagm(ones(3)),  # position
+            Kv=m*5*1.82*diagm(ones(3)),  # velocity
+            Kt=4*diagm(ones(3)),  # thrust
+            Kω=20*diagm(ones(3)),  # angular velocity
+        )
         @assert m > 0
         # from (s+5)^5 = s^5 + 25s^4 + ... (for **faster response**)
         Ks = []
@@ -32,16 +39,8 @@ struct BacksteppingPositionController <: AbstractEnv
         push!(Ks, Diagonal(25*ones(3)))
         auto_diff = pos_cmd_func == nothing ? false : true
         Ref_model = ReferenceModel(length(Ks)-1, Ks, auto_diff, pos_cmd_func)
-        # position
-        Kx = m*1*Matrix(I, 3, 3)
-        Kv = m*1*1.82*Matrix(I, 3, 3)
         Kp = hcat(Kx, Kv)
-        # Q = Diagonal(1*ones(6))
         Q = diagm(1*ones(6))
-        # thrust
-        Kt = Diagonal(4*ones(3))
-        # angular
-        Kω = Diagonal(20*ones(3))
         # reference model
         Ap = [zeros(3, 3) Matrix(I, 3, 3);
               -(1/m)*Kx -(1/m)*Kv]

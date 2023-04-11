@@ -5,10 +5,10 @@ struct BacksteppingPositionController_StaticAllocator_Multicopter <: AbstractEnv
 end
 
 # outer constructor
-function BacksteppingPositionController_StaticAllocator_Multicopter(pos_cmd_func=nothing)
+function BacksteppingPositionController_StaticAllocator_Multicopter(pos_cmd_func=nothing; controller_kwargs...)
     multicopter = LeeHexacopter()
     @unpack m, B = multicopter
-    controller = BacksteppingPositionController(m; pos_cmd_func=pos_cmd_func)
+    controller = BacksteppingPositionController(m; pos_cmd_func=pos_cmd_func, controller_kwargs...)
     allocator = PseudoInverseAllocator(B)
     env = BacksteppingPositionController_StaticAllocator_Multicopter(controller, allocator, multicopter)
 end
