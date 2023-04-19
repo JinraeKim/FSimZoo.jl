@@ -1,3 +1,7 @@
+# Changes in v0.4.0
+- `GeometricTrackingController` is added for multicopter position/attitude tracking control.
+- Dependency `UnPack` is removed.
+
 # Changes in v0.3.7
 - `BacksteppingPositionController`'s transient response is improved (faster) by adjusting the parameters of reference model (`RefModel`)
 - `LeeHexacopter`'s rotor limit is changed following the reference (written in the code).
