@@ -7,8 +7,6 @@ using FSimBase
 using ComponentArrays
 using ForwardDiff
 using MatrixEquations
-using StaticArrays
-using UnPack
 using LinearAlgebra
 
 ## basics

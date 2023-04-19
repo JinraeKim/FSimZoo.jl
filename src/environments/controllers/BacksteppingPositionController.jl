@@ -60,7 +60,7 @@ ref_model.x_3 = ȧd
 ref_model.x_4 = äd
 """
 function State(controller::BacksteppingPositionController)
-    @unpack Ref_model = controller
+    (; Ref_model) = controller
     return function (pos0, m, g)
         @assert m > 0
         ref_model = State(Ref_model)(pos0)
@@ -70,7 +70,7 @@ function State(controller::BacksteppingPositionController)
 end
 
 function Dynamics!(controller::BacksteppingPositionController)
-    @unpack Ref_model = controller
+    (; Ref_model) = controller
     @Loggable function dynamics!(dX, X, p, t; pos_cmd=nothing, Ṫd)
         @log state = X
         Dynamics!(Ref_model)(dX.ref_model, X.ref_model, (), t; x_cmd=pos_cmd)  # be careful; parameter = ()
@@ -84,7 +84,7 @@ end
 Several functions are exported from `utils.jl`, e.g., T_u_inv(T).
 """
 function Command(controller::BacksteppingPositionController)
-    @unpack Ap, Bp, P, Kp, Kt, Kω = controller
+    (; Ap, Bp, P, Kp, Kt, Kω) = controller
     T_u_inv(T) = [   0 1/T  0;
                   -1/T   0  0;
                      0   0 -1]

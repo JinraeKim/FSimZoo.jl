@@ -7,15 +7,15 @@ end
 # outer constructor
 function BacksteppingPositionController_StaticAllocator_Multicopter(pos_cmd_func=nothing; controller_kwargs...)
     multicopter = LeeHexacopter()
-    @unpack m, B = multicopter
+    (; m, B) = multicopter
     controller = BacksteppingPositionController(m; pos_cmd_func=pos_cmd_func, controller_kwargs...)
     allocator = PseudoInverseAllocator(B)
     env = BacksteppingPositionController_StaticAllocator_Multicopter(controller, allocator, multicopter)
 end
 
 function State(env::BacksteppingPositionController_StaticAllocator_Multicopter)
-    @unpack controller, allocator, multicopter = env
-    @unpack m, g = multicopter
+    (; controller, allocator, multicopter) = env
+    (; m, g) = multicopter
     function state(; args_multicopter=())
         x_multicopter = State(multicopter)(args_multicopter...)
         pos0 = copy(x_multicopter.p)
@@ -25,11 +25,11 @@ function State(env::BacksteppingPositionController_StaticAllocator_Multicopter)
 end
 
 function Dynamics!(env::BacksteppingPositionController_StaticAllocator_Multicopter)
-    @unpack controller, allocator, multicopter = env
-    @unpack m, J, g = multicopter
+    (; controller, allocator, multicopter) = env
+    (; m, J, g) = multicopter
     @Loggable function dynamics!(dx, x, params, t; pos_cmd=nothing)
-        @unpack p, v, R, ω = x.multicopter
-        @unpack ref_model, Td = x.controller
+        (; p, v, R, ω) = x.multicopter
+        (; ref_model, Td) = x.controller
         xd, vd, ad, ȧd, äd = ref_model.x_0, ref_model.x_1, ref_model.x_2, ref_model.x_3, ref_model.x_4
         νd, Ṫd, _... = Command(controller)(
                                            p, v, R, ω,

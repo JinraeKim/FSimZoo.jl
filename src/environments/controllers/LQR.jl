@@ -11,20 +11,20 @@ struct LQR <: AbstractLQR
 end
 
 function RunningCost(lqr::LQR)
-    @unpack Q, R = lqr
+    (; Q, R) = lqr
     return function (x, u)
         x'*Q*x + u'*R*u
     end
 end
 
 function ARE_solution(lqr::LQR)
-    @unpack A, B, Q, R = lqr
+    (; A, B, Q, R) = lqr
     P, _, _ = MatrixEquations.arec(A, B*inv(R)*B', Q)
     P
 end
 
 function optimal_gain(lqr::LQR)
-    @unpack B, R = lqr
+    (; B, R) = lqr
     P = ARE_solution(lqr)
     K = inv(R) * B' * P
 end
