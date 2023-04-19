@@ -24,8 +24,8 @@ struct BacksteppingPositionController <: AbstractEnv
     function BacksteppingPositionController(
             m::Real;
             pos_cmd_func=nothing,
-            Kx=m*5*diagm(ones(3)),  # position
-            Kv=m*5*1.82*diagm(ones(3)),  # velocity
+            Kx=m*1*diagm(ones(3)),  # position
+            Kv=m*1*1.82*diagm(ones(3)),  # velocity
             Kt=4*diagm(ones(3)),  # thrust
             Kω=20*diagm(ones(3)),  # angular velocity
         )
