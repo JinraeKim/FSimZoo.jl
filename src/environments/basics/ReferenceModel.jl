@@ -34,7 +34,7 @@ end
 `x_i` denotes `i`th (time) derivative of `x`
 """
 function State(env::ReferenceModel)
-    @unpack d = env
+    (; d) = env
     return function (x0)
         xs_dict = Dict(:x_0 => x0)
         for i in 1:d
@@ -45,7 +45,7 @@ function State(env::ReferenceModel)
 end
 
 function Dynamics!(env::ReferenceModel)
-    @unpack d, Ks, auto_diff, x_cmd_func = env
+    (; d, Ks, auto_diff, x_cmd_func) = env
     # derivatives for auto_diff
     funcs = nothing
     if auto_diff

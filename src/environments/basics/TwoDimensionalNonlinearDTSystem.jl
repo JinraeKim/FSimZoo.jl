@@ -25,9 +25,9 @@ function V1(env::TwoDimensionalNonlinearDTSystem)
 end
 
 function Dynamics!(env::TwoDimensionalNonlinearDTSystem)
-    @unpack c, d = env
+    (; c, d) = env
     @Loggable function dynamics!(dx, x, p, t; u)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         @log state = x
         @log input = u
         dx.x1 = c*(x1 + x2)  # x1_next = dx.x1
@@ -37,7 +37,7 @@ function Dynamics!(env::TwoDimensionalNonlinearDTSystem)
 end
 
 function CubicSolution(env::TwoDimensionalNonlinearDTSystem)
-    @unpack c, d = env
+    (; c, d) = env
     return function (x2)
         a = (
              (cbrt(sqrt(3)*sqrt(27*c^2*x2^2 + 8) + 9*c*x2) / 3^(2/3))
@@ -47,9 +47,9 @@ function CubicSolution(env::TwoDimensionalNonlinearDTSystem)
 end
 
 function RunningCost(env::TwoDimensionalNonlinearDTSystem)
-    @unpack c, d = env
+    (; c, d) = env
     return function (x, u)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         dx = copy(x)  # will be next state
         Dynamics!(env)(dx, x, nothing, nothing; u=u)
         a = CubicSolution(env)(x2)
@@ -63,9 +63,9 @@ function RunningCost(env::TwoDimensionalNonlinearDTSystem)
 end
 
 function OptimalValue(env::TwoDimensionalNonlinearDTSystem)
-    @unpack c, d = env
+    (; c, d) = env
     return function (x)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         d*V1(env)(x1) + x2^2
     end
 end
@@ -80,7 +80,7 @@ end
 
 function OptimalControl(env::TwoDimensionalNonlinearDTSystem)
     return function (x)
-        @unpack x2 = x
+        (; x2) = x
         a = CubicSolution(env)(x2)
         -a
     end

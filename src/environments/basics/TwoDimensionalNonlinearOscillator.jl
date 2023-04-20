@@ -20,7 +20,7 @@ end
 
 function Dynamics!(env::TwoDimensionalNonlinearOscillator)
     @Loggable function dynamics!(dx, x, p, t; u)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         @log state = x
         @log input = u
         dx.x1 = x2
@@ -35,21 +35,21 @@ end
 
 function RunningCost(env::TwoDimensionalNonlinearOscillator)
     return function (x, u)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         r = x2^2 + u[1]^2
     end
 end
 
 function OptimalValue(env::TwoDimensionalNonlinearOscillator)
     return function (x)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         V_star = x1^2 * (π/2 + atan(5*x1)) + x2^2
     end
 end
 
 function OptimalControl(env::TwoDimensionalNonlinearOscillator)
     return function (x)
-        @unpack x1, x2 = x
+        (; x1, x2) = x
         u_star = [-3*x2]  # make it vector
     end
 end

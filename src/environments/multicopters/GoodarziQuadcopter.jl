@@ -23,7 +23,7 @@ Base.@kwdef struct GoodarziQuadcopter <: Quadcopter
 end
 
 function saturate(env::GoodarziQuadcopter, u)
-    @unpack u_min, u_max = env
+    (; u_min, u_max) = env
     u_saturated = clamp.(u, u_min, u_max)
 end
 

@@ -33,10 +33,10 @@ function State(controller::PID)
 end
 
 function Dynamics!(controller::PID)
-    @unpack ω_n, ζ, windup_limit = controller
+    (; ω_n, ζ, windup_limit) = controller
     @Loggable function dynamics!(dx, x, p, t; e)
         @assert !(typeof(e) <: Number)  # make sure that `e` is a 1-d array
-        @unpack ∫e, ê, ė̂ = x
+        (; ∫e, ê, ė̂) = x
         @onlylog e, ∫e, ê, ė̂
         if norm(∫e) < windup_limit
             dx.∫e .= e
@@ -51,7 +51,7 @@ function Dynamics!(controller::PID)
 end
 
 function Command(controller::PID)
-    @unpack K_P, K_I, K_D = controller
+    (; K_P, K_I, K_D) = controller
     function command(e, ∫e, ė̂)
         -(K_P*e + K_I*∫e + K_D*ė̂)
     end

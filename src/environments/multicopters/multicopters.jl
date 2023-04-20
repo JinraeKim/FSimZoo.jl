@@ -5,7 +5,7 @@ abstract type Multicopter <: AbstractEnv end
 Common state structure of Multicopter
 """
 function State(multicopter::Multicopter)
-    return function (p=zeros(3), v=zeros(3), R=SMatrix{3, 3}(I), ω=zeros(3))
+    return function (p=zeros(3), v=zeros(3), R=diagm(ones(3)), ω=zeros(3))
         ComponentArray(p=p, v=v, R=R, ω=ω)
     end
 end
@@ -52,7 +52,7 @@ It is because many packages including `ReferenceFrameRotations.jl` follows the d
 [1] T. Lee, M. Leok, and N. H. McClamroch, “Geometric Tracking Control of a Quadrotor UAV on SE(3),” in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010, pp. 5420–5425. doi: 10.1109/CDC.2010.5717652.
 """
 function __Dynamics!(multicopter::Multicopter)
-    @unpack m, g, J = multicopter
+    (; m, g, J) = multicopter
     J_inv = inv(J)
     e3 = [0, 0, 1]
     # skew(x): ℝ³ → ℝ⁹ such that x×y = skew(x)*y
@@ -60,7 +60,7 @@ function __Dynamics!(multicopter::Multicopter)
                 x[3]     0 -x[1];
                -x[2]  x[1]    0]
     @Loggable function dynamics!(dX, X, p, t; f, M)
-        @unpack p, v, R, ω = X
+        (; p, v, R, ω) = X
         @onlylog state = X
         @nested_log :input f, M
         Ω = skew(ω)

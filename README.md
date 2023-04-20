@@ -2,11 +2,6 @@
 [FSimZoo.jl](https://github.com/JinraeKim/FSimZoo.jl)
 contains predefined environments and controllers for [FlightSims.jl](https://github.com/JinraeKim/FlightSims.jl).
 
-## Road map
-- [x] Re-name environments and controllers. Current naming is too confusing and unorganised.
-- [ ] Re-write missile environments and guidance laws; import them from [FlightGNC.jl](https://github.com/nhcho91/FlightGNC.jl).
-- [ ] Re-write approximate optimal control methods from [ApproximateDPs.jl](https://github.com/hnlee77/ApproximateDPs.jl).
-
 ## Examples
 - Examples include
 
@@ -27,7 +22,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     <details>
     <summary>multicopters</summary>
 
-    - (Hexacopter) `LeeHexacopter` (**currently maintained**)
+    - (Hexacopter) `LeeHexacopter`, `LeeQuadcopter` (**currently maintained**)
     - (Quadcopter) `IslamQuadcopter`, `GoodarziQuadcopter`
 
     </details>
@@ -45,6 +40,9 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     - (Linear quadratic regulator) `LQR`
     - (Proportional-Integral-Derivative controller) `PID`
         - Note that the derivative term is obtained via second-order filter.
+    - (For multicopter position tracking)
+        - `BacksteppingPositionController` (control input: `T_dot`, `M`)
+        - `GeometricTrackingController` (control input: `T`, `M`)
     - (Pure proportional navigation guidance) `PPNG`
 
     </details>

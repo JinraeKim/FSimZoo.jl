@@ -25,11 +25,11 @@ Base.@kwdef struct IslamQuadcopter <: Quadcopter
 end
 
 function saturate(env::IslamQuadcopter, u)
-    @unpack u_min, u_max = env
+    (; u_min, u_max) = env
     u_saturated = clamp.(u, u_min, u_max)
 end
 
 function input_to_force_moment(env::IslamQuadcopter, u)
-    @unpack B = env
+    (; B) = env
     ν = B * u
 end

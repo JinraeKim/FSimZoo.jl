@@ -4,7 +4,7 @@ struct LinearSystem <: AbstractEnv
 end
 
 function State(env::LinearSystem)
-    @unpack B = env
+    (; B) = env
     n = size(B)[1]
     return function (x)
         @assert length(x) == n
@@ -17,7 +17,7 @@ function Params(env::LinearSystem)
 end
 
 function Dynamics!(env::LinearSystem)
-    @unpack A, B = env
+    (; A, B) = env
     @Loggable function dynamics!(dx, x, p, t; u)
         @log state = x
         @log input = u

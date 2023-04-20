@@ -28,12 +28,12 @@ Base.@kwdef struct LeeHexacopter <: Hexacopter
 end
 
 function saturate(multicopter::LeeHexacopter, u)
-    @unpack u_min, u_max = multicopter
+    (; u_min, u_max) = multicopter
     u_saturated = clamp.(u, u_min, u_max)
 end
 
 function input_to_force_moment(multicopter::LeeHexacopter, u)
-    @unpack B = multicopter
+    (; B) = multicopter
     ν = B * u
 end
 
