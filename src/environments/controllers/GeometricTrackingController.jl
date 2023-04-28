@@ -4,7 +4,7 @@ Geometric tracking controller for multicopter [1].
 # References
 [1] T. Lee, M. Leok, and N. H. McClamroch, “Geometric Tracking Control of a Quadrotor UAV on SE(3),” in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010. doi: 10.1109/CDC.2010.5717652.
 """
-Base.@kwdef struct GeometricTrackingController
+Base.@kwdef struct GeometricTrackingController <: AbstractEnv
     k_p = 5
     k_v = 5
     k_R = deg2rad(5)
@@ -13,6 +13,41 @@ Base.@kwdef struct GeometricTrackingController
     ζ_v = 0.99
     ω_n_a = 5e2
     ζ_a = 0.99
+end
+
+
+Base.@kwdef struct InnerLoopGeometricTrackingController <:AbstractEnv
+end
+
+
+function Command(
+        controller::InnerLoopGeometricTrackingController, R, ω;
+    )
+    f = dot(_b_3_d, R*e_3)
+    ν = [f, M...]
+    return ν
+end
+
+
+
+Base.@kwdef struct OuterLoopGeometricTrackingController <:AbstractEnv
+    k_p = 5
+    k_v = 5
+end
+
+
+function Command(
+        controller::OuterLoopGeometricTrackingController, p, v;
+        p_d, v_d, a_d,
+        m, g,
+    )
+    (; k_p, k_v) = controller
+    e_3 = [0, 0, 1]
+
+    e_p = p - p_d
+    e_v = v - v_d
+    _b_3_d = -(-k_p*e_p - k_v*e_v - m*g*e_3 + m*a_d)  # desired force vector
+    return _b_3_d
 end
 
 
