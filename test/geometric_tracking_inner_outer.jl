@@ -15,15 +15,14 @@ function outerloop()
     a_d = t -> ForwardDiff.derivative(v_d, t)
 
     t = 0.0
-    _b_3_d, f = Command(
-                controller, p, v, R';
-                p_d=p_d(t),
-                v_d=v_d(t),
-                a_d=a_d(t),
-                m=m, g=g,
-               )
+    _b_3_d = Command(
+                     controller, p, v;
+                     p_d=p_d(t),
+                     v_d=v_d(t),
+                     a_d=a_d(t),
+                     m=m, g=g,
+                    )
     @test length(_b_3_d) == 3
-    @test length(f) == 1
 end
 
 
