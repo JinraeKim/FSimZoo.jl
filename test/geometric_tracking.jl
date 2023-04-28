@@ -6,7 +6,7 @@ using Plots
 using DifferentialEquations
 
 
-function main(; tf=1.0)
+function main()
     multicopter = LeeQuadcopter()
     (; m, g, J) = multicopter
     X0 = State(multicopter)()
