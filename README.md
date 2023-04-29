@@ -43,6 +43,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     - (For multicopter position tracking)
         - `BacksteppingPositionController` (control input: `T_dot`, `M`)
         - `GeometricTrackingController` (control input: `T`, `M`)
+        - `InnerLoopGeometricTrackingController` and `OuterLoopGeometricTrackingController` (based on `GeometricTrackingController` but seperated for a hierarchical structure)
     - (Pure proportional navigation guidance) `PPNG`
 
     </details>

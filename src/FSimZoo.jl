@@ -15,7 +15,7 @@ export TwoDimensionalNonlinearOscillator, SingleIntegrator
 export TwoDimensionalNonlinearDTSystem
 ## controllers
 export LQR, PID, BacksteppingPositionController
-export GeometricTrackingController, OuterLoopGeometricTrackingController
+export GeometricTrackingController, OuterLoopGeometricTrackingController, InnerLoopGeometricTrackingController
 ## multicopters
 export Multicopter
 export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter
