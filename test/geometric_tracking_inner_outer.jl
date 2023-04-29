@@ -2,6 +2,8 @@ using Test
 using ForwardDiff
 using FSimZoo
 using FSimBase
+using DifferentialEquations
+using Plots
 
 
 function outerloop()
