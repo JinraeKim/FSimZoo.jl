@@ -2,7 +2,7 @@ using Test
 using ForwardDiff
 using FSimZoo
 using FSimBase
-using DifferentialEquations
+using OrdinaryDiffEq
 using Plots
 
 

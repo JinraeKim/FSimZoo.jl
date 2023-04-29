@@ -3,7 +3,7 @@ using FSimZoo
 using FSimBase
 using ForwardDiff
 using Plots
-using DifferentialEquations
+using OrdinaryDiffEq
 
 
 function main()
