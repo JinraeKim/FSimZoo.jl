@@ -19,9 +19,9 @@ end
 Base.@kwdef struct InnerLoopGeometricTrackingController <:AbstractEnv
     k_R = deg2rad(5)
     k_ω = deg2rad(5)
-    ω_n_f = 5e2
+    ω_n_f = 1e2
     ζ_f = 0.99
-    ω_n_f_dot = 5e2
+    ω_n_f_dot = 1e2
     ζ_f_dot = 0.99
 end
 
@@ -42,8 +42,12 @@ end
 
 function FSimBase.Dynamics!(controller::InnerLoopGeometricTrackingController)
     (; ω_n_f, ω_n_f_dot, ζ_f, ζ_f_dot) = controller
-    return function (dX, X, params, t; f)
+    @Loggable function dynamics!(dX, X, params, t; f)
         (; z1_f, z2_f, z1_f_dot, z2_f_dot) = X
+        @log z1_f
+        @log z2_f
+        @log z1_f_dot
+        @log z2_f_dot
         dX.z1_f = ω_n_f * z2_f
         dX.z2_f = -2*ζ_f*ω_n_f*z2_f - ω_n_f*(z1_f-f)
         dX.z1_f_dot = ω_n_f_dot * z2_f_dot
