@@ -17,13 +17,74 @@ end
 
 
 Base.@kwdef struct InnerLoopGeometricTrackingController <:AbstractEnv
+    k_R = deg2rad(5)
+    k_ω = deg2rad(5)
+    ω_n_f = 5e2
+    ζ_f = 0.99
+    ω_n_f_dot = 5e2
+    ζ_f_dot = 0.99
+end
+
+
+function FSimBase.State(controller::InnerLoopGeometricTrackingController)
+    return function (
+                     z1_f=zeros(3), z2_f=zeros(3),
+                     z1_f_dot=zeros(3), z2_f_dot=zeros(3),
+                    )
+        X0 = ComponentArray(
+                            z1_f=z1_f, z2_f=z2_f,
+                            z1_f_dot=z1_f_dot, z2_f_dot=z2_f_dot,
+                           )
+        return X0
+    end
+end
+
+
+function FSimBase.Dynamics!(controller::InnerLoopGeometricTrackingController)
+    (; ω_n_f, ω_n_f_dot, ζ_f, ζ_f_dot) = controller
+    return function (dX, X, params, t; f)
+        (; z1_f, z2_f, z1_f_dot, z2_f_dot) = X
+        dX.z1_f = ω_n_f * z2_f
+        dX.z2_f = -2*ζ_f*ω_n_f*z2_f - ω_n_f*(z1_f-f)
+        dX.z1_f_dot = ω_n_f_dot * z2_f_dot
+        dX.z2_f_dot = -2*ζ_f_dot*ω_n_f_dot*z2_f_dot - ω_n_f_dot*(z1_f_dot-ω_n_f*z2_f)
+    end
 end
 
 
 function Command(
         controller::InnerLoopGeometricTrackingController, R, ω;
+        b_1_d, b_1_d_dot, b_1_d_ddot,
+        _b_3_d, _b_3_d_dot, _b_3_d_ddot,
+        J,
     )
+    (; k_R, k_ω) = controller
+    e_3 = [0, 0, 1]
+
+    b_3_d = _b_3_d / norm(_b_3_d)
+    b_3_d_dot = _unit_vector_dot(_b_3_d, _b_3_d_dot)
+    b_3_d_ddot = _unit_vector_ddot(_b_3_d, _b_3_d_dot, _b_3_d_ddot)
+
+    _b_2_d = cross(b_3_d, b_1_d)
+    _b_2_d_dot = cross(b_3_d_dot, b_1_d) + cross(b_3_d, b_1_d_dot)
+    _b_2_d_ddot = cross(b_3_d_ddot, b_1_d) + cross(b_3_d_dot, b_1_d_dot) + cross(b_3_d, b_1_d_ddot)
+    b_2_d = _b_2_d / norm(_b_2_d)
+    b_2_d_dot = _unit_vector_dot(_b_2_d, _b_2_d_dot)
+    b_2_d_ddot = _unit_vector_ddot(_b_2_d, _b_2_d_dot, _b_2_d_ddot)
+
+    R_d = [cross(b_2_d, b_3_d)  b_2_d  b_3_d]
+    R_d_dot = [(cross(b_2_d_dot, b_3_d) + cross(b_2_d, b_3_d_dot)) b_2_d_dot b_3_d_dot]
+    R_d_ddot = [(cross(b_2_d_ddot, b_3_d) + cross(b_2_d_dot, b_3_d_dot) + cross(b_2_d, b_3_d_ddot)) b_2_d_ddot b_3_d_ddot]
+    ω_d_hat = R_d' * R_d_dot  # guessed from the equation between [1, Eq. (10)] and [1, Eq. (11)].
+    ω_d = _vee(ω_d_hat)
+    ω_d_dot_hat = R_d_dot' * R_d_dot + R_d' * R_d_ddot
+    ω_d_dot = _vee(ω_d_dot_hat)
+
+    e_R = 0.5 * _vee(R_d'*R - R'*R_d)
+    e_ω = ω - R'*R_d*ω_d
+
     f = dot(_b_3_d, R*e_3)
+    M = -k_R*e_R - k_ω*e_ω + cross(ω, J*ω) - J*(_hat(ω) * R' * R_d * ω_d - R' * R_d * ω_d_dot)
     ν = [f, M...]
     return ν
 end
@@ -157,7 +218,7 @@ This implies that we need to obtain acceleration (a=v_dot)
 to get the control input f (total thrust),
 but the acceleration is induced by f, which results in algebraic loop.
 
-Therefore, the e_a and e_a_dot is neglected here.
+Therefore, the a_d and higher-order derivatives are obtained from derivative filters.
 """
 function Command(
         controller::GeometricTrackingController, p, v, R, ω;
