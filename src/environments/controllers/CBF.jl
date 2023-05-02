@@ -29,10 +29,9 @@ v in R^3
 u_nom: nominal control input, in R^m
 """
 function Command(
-        cbf::InputAffinePositionCBF, p, v, u_nom, constraints;
+        cbf::InputAffinePositionCBF, u, p, v, u_nom, constraints;
         solver=ECOS.Optimizer, silent_solver=true,
     )
-    u = Convex.Variable(length(u_nom))
     cbf_constraint = generate_constraint(cbf, p, v, u)
     constraints = [constraints..., cbf_constraint]
     problem = minimize(sumsquares(u - u_nom), constraints)

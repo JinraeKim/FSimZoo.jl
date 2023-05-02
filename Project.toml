@@ -14,6 +14,8 @@ MatrixEquations = "99c1a7ee-ab34-5fd5-8076-27c950a045f4"
 
 [compat]
 ComponentArrays = "0.13"
+Convex = "0.15"
+ECOS = "1.1"
 FSimBase = "0.2"
 ForwardDiff = "0.10"
 MatrixEquations = "2.1"

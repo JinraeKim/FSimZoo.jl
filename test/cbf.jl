@@ -2,6 +2,7 @@ using Test
 using FSimZoo
 using FSimBase
 using LinearAlgebra
+using Convex
 
 
 function test_InputAffinePositionCBF()
@@ -15,7 +16,8 @@ function test_InputAffinePositionCBF()
     p = zeros(3)
     v = zeros(3)
     u_nom = zeros(3)
-    u = Command(cbf, p, v, u_nom, [])
+    u = Convex.Variable(length(u_nom))
+    u = Command(cbf, u, p, v, u_nom, [])
 end
 
 
