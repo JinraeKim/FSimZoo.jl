@@ -20,7 +20,7 @@ export GeometricTrackingController, OuterLoopGeometricTrackingController, InnerL
 export InputAffinePositionCBF
 ## multicopters
 export Multicopter
-export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter
+export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter, GoodarziAgileQuadcopterQuadcopter
 export Hexacopter, LeeHexacopter
 # control allocator
 export AbstractAllocator, StaticAllocator
