@@ -22,7 +22,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     <details>
     <summary>multicopters</summary>
 
-    - (Hexacopter) `LeeHexacopter`, `LeeQuadcopter` (**currently maintained**)
+    - (Hexacopter) `LeeHexacopter`, `LeeQuadcopter`, `GoodarziAgileQuadcopter` (**currently maintained**)
     - (Quadcopter) `IslamQuadcopter`, `GoodarziQuadcopter`
 
     </details>
