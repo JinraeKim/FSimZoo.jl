@@ -40,11 +40,13 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     - (Linear quadratic regulator) `LQR`
     - (Proportional-Integral-Derivative controller) `PID`
         - Note that the derivative term is obtained via second-order filter.
+    - (Pure proportional navigation guidance) `PPNG`
     - (For multicopter position tracking)
         - `BacksteppingPositionController` (control input: `T_dot`, `M`)
         - `GeometricTrackingController` (control input: `T`, `M`)
         - `InnerLoopGeometricTrackingController` and `OuterLoopGeometricTrackingController` (based on `GeometricTrackingController` but seperated for a hierarchical structure)
-    - (Pure proportional navigation guidance) `PPNG`
+    - (Safety filters via control barrier functions (CBFs))
+        - (Position CBF for input-affine systems) `InputAffinePositionCBF`
 
     </details>
 

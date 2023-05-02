@@ -8,6 +8,7 @@ using ComponentArrays
 using ForwardDiff
 using MatrixEquations
 using LinearAlgebra
+using Convex, ECOS
 
 ## basics
 export TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
@@ -16,6 +17,7 @@ export TwoDimensionalNonlinearDTSystem
 ## controllers
 export LQR, PID, BacksteppingPositionController
 export GeometricTrackingController, OuterLoopGeometricTrackingController, InnerLoopGeometricTrackingController
+export InputAffinePositionCBF
 ## multicopters
 export Multicopter
 export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter
