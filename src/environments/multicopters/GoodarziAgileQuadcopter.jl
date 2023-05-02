@@ -28,16 +28,16 @@ Base.@kwdef struct GoodarziAgileQuadcopter <: Quadcopter
     u_max = 3.2 * ones(dim_input)
 end
 
-function saturate(multicopter::LeeQuadcopter, u)
+function saturate(multicopter::GoodarziAgileQuadcopter, u)
     (; u_min, u_max) = multicopter
     u_saturated = clamp.(u, u_min, u_max)
 end
 
-function input_to_force_moment(multicopter::LeeQuadcopter, u)
+function input_to_force_moment(multicopter::GoodarziAgileQuadcopter, u)
     (; B) = multicopter
     ν = B * u
 end
 
-function airframe_reference(multicopter::LeeQuadcopter)
+function airframe_reference(multicopter::GoodarziAgileQuadcopter)
     :quad_plus
 end
