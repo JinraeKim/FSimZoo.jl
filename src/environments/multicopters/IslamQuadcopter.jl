@@ -15,6 +15,7 @@ Base.@kwdef struct IslamQuadcopter <: Quadcopter
           0 -kf   0  kf;
          kf   0 -kf   0;
          kM -kM  kM -kM]
+    D = diagm(zeros(3))
     # drags
     # kt = Diagonal(0.1*ones(3))  # Ns / m
     # kr = Diagonal(0.1*ones(3))  # N m s

@@ -22,6 +22,7 @@ Base.@kwdef struct GoodarziAgileQuadcopter <: Quadcopter
          -l   l             0              0;
           0   0             l             -l;
          kM  kM           -kM            -kM]
+    D = diagm(zeros(3))
     # actuator limit
     dim_input = 4
     u_min = zeros(dim_input)
