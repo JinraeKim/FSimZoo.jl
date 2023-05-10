@@ -21,6 +21,7 @@ Base.@kwdef struct LeeHexacopter <: Hexacopter
          -l   l         0.5*l         -0.5*l        -0.5*l          0.5*l;
           0   0 0.5*sqrt(3)*l -0.5*sqrt(3)*l 0.5*sqrt(3)*l -0.5*sqrt(3)*l;
         -kM  kM           -kM             kM            kM            -kM]
+    D = diagm(zeros(3))
     # actuator limit
     dim_input = 6
     u_min = zeros(dim_input)

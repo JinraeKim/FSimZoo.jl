@@ -43,6 +43,9 @@ For example, x̂_I = R'*[1, 0, 0] where x̂_I is the x-axis of B-frame read in I
 f ∈ ℝ: total thrust
 M ∈ ℝ^3: moment
 
+## Parameters
+D denotes the drag coefficient matrix [2].
+
 ## BE CAREFUL
 The definition of DCM, R, is the transpose of the DCM introduced in [1].
 It is because many packages including `ReferenceFrameRotations.jl` follows the definition of
@@ -50,9 +53,10 @@ It is because many packages including `ReferenceFrameRotations.jl` follows the d
 
 # Reference
 [1] T. Lee, M. Leok, and N. H. McClamroch, “Geometric Tracking Control of a Quadrotor UAV on SE(3),” in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010, pp. 5420–5425. doi: 10.1109/CDC.2010.5717652.
+[2] M. Faessler, A. Franchi, and D. Scaramuzza, “Differential Flatness of Quadrotor Dynamics Subject to Rotor Drag for Accurate Tracking of High-Speed Trajectories,” IEEE Robot. Autom. Lett., vol. 3, no. 2, pp. 620–626, Apr. 2018, doi: 10.1109/LRA.2017.2776353.
 """
 function __Dynamics!(multicopter::Multicopter)
-    (; m, g, J) = multicopter
+    (; m, g, J, D) = multicopter
     J_inv = inv(J)
     e3 = [0, 0, 1]
     # skew(x): ℝ³ → ℝ⁹ such that x×y = skew(x)*y
@@ -65,7 +69,7 @@ function __Dynamics!(multicopter::Multicopter)
         @nested_log :input f, M
         Ω = skew(ω)
         dX.p = v
-        dX.v = -(1/m)*f*R'*e3 + g*e3
+        dX.v = -(1/m)*f*R'*e3 + g*e3 - R'*D*R*v
         dX.R = -Ω*R
         dX.ω = J_inv * (-Ω*J*ω + M)
     end

@@ -16,6 +16,7 @@ Base.@kwdef struct GoodarziQuadcopter <: Quadcopter
     J = 1e-2 * Diagonal([0.557, 0.557, 1.050])  # kg m²
     J_inv = inv(J)
     g = 9.81  # m/s²
+    D = diagm(zeros(3))
     # input limits
     dim_input = 4
     u_min = zeros(dim_input)
