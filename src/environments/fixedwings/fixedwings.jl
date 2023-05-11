@@ -26,6 +26,7 @@ end
 
 
 function Dynamics!(env::WingRock)
+    (; W_true) = env
     function dynamics!(dx, x, p, t; u)
         (; x1, x2) = x
         ϕ = [x1, x2, abs(x1)*x2, abs(x2)*x2, x1^3]

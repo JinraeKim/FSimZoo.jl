@@ -2,6 +2,9 @@
 ## Basic environments
 include("basics/basics.jl")
 
+## Fixed wings
+include("fixedwings/fixedwings.jl")
+
 ## Multicopters
 include("multicopters/multicopters.jl")
 

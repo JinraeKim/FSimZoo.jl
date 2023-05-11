@@ -1,8 +1,10 @@
 using FSimZoo
 using Test
+using FSimBase
 
 
 function main()
+    t = 0.0
     W_true = rand(5)
     env = WingRock(W_true)
     x1, x2 = rand(2)
