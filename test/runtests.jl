@@ -5,4 +5,5 @@ using Test
     include("geometric_tracking.jl")
     include("geometric_tracking_inner_outer.jl")
     include("cbf.jl")
+    include("environments/environments.jl")
 end

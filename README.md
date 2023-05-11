@@ -20,6 +20,13 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     </details>
 
     <details>
+    <summary>fixed wings</summary>
+
+    - `WingRock`
+
+    </details>
+
+    <details>
     <summary>multicopters</summary>
 
     - (Hexacopter) `LeeHexacopter`, `LeeQuadcopter`, `GoodarziAgileQuadcopter` (**currently maintained**)
