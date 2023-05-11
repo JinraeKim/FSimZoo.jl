@@ -29,8 +29,8 @@ function Dynamics!(env::WingRock)
     (; W_true) = env
     @Loggable function dynamics!(dx, x, p, t; u)
         (; x1, x2) = x
-        @logonly state = x
-        @logonly input = u
+        @log state = x
+        @log input = u
         ϕ = [x1, x2, abs(x1)*x2, abs(x2)*x2, x1^3]
         Δ = W_true' * ϕ
         dx.x1 = x2
