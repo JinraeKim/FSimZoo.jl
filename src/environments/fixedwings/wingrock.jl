@@ -25,15 +25,33 @@ function State(env::WingRock)
 end
 
 
+"""
+Out-of-place dynamics
+"""
+function oop_dynamics(env::WingRock)
+    (; W_true) = env
+    return function (x, p, t; u)
+        (; x1, x2) = x
+        ϕ = [x1, x2, abs(x1)*x2, abs(x2)*x2, x1^3]
+        Δ = W_true' * ϕ
+        dx1 = x2
+        dx2 = u + Δ
+        dx = State(env)(dx1, dx2)
+        return dx
+    end
+end
+
+
 function Dynamics!(env::WingRock)
     (; W_true) = env
     @Loggable function dynamics!(dx, x, p, t; u)
         (; x1, x2) = x
         @log state = x
         @log input = u
-        ϕ = [x1, x2, abs(x1)*x2, abs(x2)*x2, x1^3]
-        Δ = W_true' * ϕ
-        dx.x1 = x2
-        dx.x2 = u + Δ
+        dx .= oop_dynamics(env)(x, p, t; u=u)
+        # ϕ = [x1, x2, abs(x1)*x2, abs(x2)*x2, x1^3]
+        # Δ = W_true' * ϕ
+        # dx.x1 = x2
+        # dx.x2 = u + Δ
     end
 end
