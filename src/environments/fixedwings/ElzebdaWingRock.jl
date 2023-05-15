@@ -35,7 +35,7 @@ end
 """
 Out-of-place dynamics
 """
-function oop_dynamics(env::ElzebdaWingRock)
+function Dynamics(env::ElzebdaWingRock)
     (; W_true) = env
     return function (x, p, t; u)
         (; x1, x2) = x
@@ -56,6 +56,6 @@ function Dynamics!(env::ElzebdaWingRock)
         u_saturated = clamp.(u, u_min, u_max)
         @log state = x
         @log input = ComponentArray(u_cmd=u, u_applied=u_saturated) 
-        dx .= oop_dynamics(env)(x, p, t; u=u_saturated)
+        dx .= Dynamics(env)(x, p, t; u=u_saturated)
     end
 end

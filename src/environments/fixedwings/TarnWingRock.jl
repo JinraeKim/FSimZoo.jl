@@ -32,7 +32,7 @@ end
 """
 Out-of-place dynamics
 """
-function oop_dynamics(env::TarnWingRock)
+function Dynamics(env::TarnWingRock)
     (; a1, a2, a3, a4, a5, C1, C2) = env
     return function (x, p, t; u)
         (; x1, x2) = x
@@ -59,6 +59,6 @@ function Dynamics!(env::TarnWingRock)
         u_saturated = clamp.(u, u_min, u_max)
         @log state = x
         @log input = ComponentArray(u_cmd=u, u_applied=u_saturated) 
-        dx .= oop_dynamics(env)(x, p, t; u=u_saturated)
+        dx .= Dynamics(env)(x, p, t; u=u_saturated)
     end
 end
