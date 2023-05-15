@@ -19,7 +19,7 @@ export LQR, PID, BacksteppingPositionController
 export GeometricTrackingController, OuterLoopGeometricTrackingController, InnerLoopGeometricTrackingController
 export InputAffinePositionCBF
 ## fixedwings
-export WingRock
+export AbstractWingRock, ElzebdaWingRock, TarnWingRock
 ## multicopters
 export Multicopter
 export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter, GoodarziAgileQuadcopter
