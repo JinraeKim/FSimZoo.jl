@@ -1,4 +1,4 @@
-abstract type AbstractActuators <: AbstractEnv end
+abstract type AbstractActuator <: AbstractEnv end
 
 
 include("SecondOrderActuator.jl")
