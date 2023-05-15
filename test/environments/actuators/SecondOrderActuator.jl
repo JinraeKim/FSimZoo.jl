@@ -10,9 +10,9 @@ function main()
     env = SecondOrderActuator(ζ, ω)
     x1, x2 = rand(2)
     X = State(env)(x1, x2)
-    u = 0.0
+    δ_cmd = 0.0
     dX = deepcopy(X)
-    Dynamics!(env)(dX, X, [], t; u=u)
+    Dynamics!(env)(dX, X, [], t; δ_cmd=δ_cmd)
 end
 
 
