@@ -26,6 +26,8 @@ export AbstractWingRock, ElzebdaWingRock, TarnWingRock
 export Multicopter
 export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter, GoodarziAgileQuadcopter
 export Hexacopter, LeeHexacopter
+## missiles
+export MissileLongitudinal
 # control allocator
 export AbstractAllocator, StaticAllocator
 export PseudoInverseAllocator
