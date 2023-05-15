@@ -87,6 +87,9 @@ function Dynamics(env::MissileLongitudinal)
         Cz(α, M, δ) = (aₙ*α^3 + bₙ* α * abs(α) + cₙ * (2.0 - M/3.0)*α +dₙ *δ)
         Cm(α, M, δ, q) = (aₘ*α^3 + bₘ* α * abs(α) + cₘ * (-7.0 + 8.0*M/3.0) *α +dₘ *δ + eₘ*q)
 
+        Vₛ = sonic_speed(h)
+        ρ = density(h)    
+
         α_dot = ρ * Vₛ * M * S_ref / (2.0 * mass) * (Cz(α, M, δ) * cos(α) - Ca() * sin(α)) + grav/(Vₛ * M) *cos(γ)+ q
         q_dot = ρ * Vₛ^2 * M^2 * S_ref * d_ref / (2.0 * I_yy) * Cm(α, M, δ, q)
         M_dot = ρ * Vₛ * M^2 * S_ref / (2.0 * mass) * (Cz(α, M, δ) * sin(α) + Ca() * cos(α)) - grav/Vₛ * sin(γ)

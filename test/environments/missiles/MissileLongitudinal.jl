@@ -4,6 +4,7 @@ using FSimBase
 
 
 function main()
+    env = MissileLongitudinal()
     t = 0.0
     X = State(env)()
     δ = deg2rad(10)
