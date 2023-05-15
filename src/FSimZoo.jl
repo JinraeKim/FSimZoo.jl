@@ -18,6 +18,8 @@ export TwoDimensionalNonlinearDTSystem
 export LQR, PID, BacksteppingPositionController
 export GeometricTrackingController, OuterLoopGeometricTrackingController, InnerLoopGeometricTrackingController
 export InputAffinePositionCBF
+## actuators
+export SecondOrderActuator
 ## fixedwings
 export AbstractWingRock, ElzebdaWingRock, TarnWingRock
 ## multicopters

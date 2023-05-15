@@ -2,6 +2,9 @@
 ## Basic environments
 include("basics/basics.jl")
 
+## Actuators
+include("actuators/actuators.jl")
+
 ## Fixed wings
 include("fixedwings/fixedwings.jl")
 
