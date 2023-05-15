@@ -22,7 +22,7 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     <details>
     <summary>fixed wings</summary>
 
-    - `WingRock`
+    - (Wing Rock phenomenon) `TarnWingRock`, `ElzebdaWingRock`
 
     </details>
 
