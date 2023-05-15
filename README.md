@@ -20,6 +20,13 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
     </details>
 
     <details>
+    <summary>Actuators</summary>
+
+    - `SecondOrderActuator`
+
+    </details>
+    <details>
+
     <summary>fixed wings</summary>
 
     - `WingRock`
