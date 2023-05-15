@@ -5,8 +5,7 @@ using FSimBase
 
 function test_elzebdawingrock()
     t = 0.0
-    W_true = rand(5)
-    env = ElzebdaWingRock(W_true)
+    env = ElzebdaWingRock()
     x1, x2 = rand(2)
     X = State(env)(x1, x2)
     u = 0.0
