@@ -31,8 +31,7 @@ mach : Mach number -]
 γ : Flight path angle [rad]
 """
 function State(env::MissileLongitudinal)
-
-    return function (α, q, M, γ, h)
+    return function (α=deg2rad(0), q=deg2rad(0), M=4.0, γ=deg2rad(0), h=10_000)
         ComponentArray(α=α, q=q, M=M, γ=γ, h=h)
     end
 end
