@@ -1,11 +1,11 @@
-struct SecondOrderActuator <: AbstractActuator
-    ζ
-    ω
+Base.@kwdef struct SecondOrderActuator <: AbstractActuator
+    ζ=0.7
+    ω=150.0
 end
 
 
 function State(env::SecondOrderActuator)
-    return function (δ, δ̇)
+    return function (δ=0.0, δ̇=0.0)
         ComponentArray(δ=δ, δ̇=δ̇)
     end
 end
