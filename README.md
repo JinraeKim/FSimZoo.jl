@@ -2,6 +2,9 @@
 [FSimZoo.jl](https://github.com/JinraeKim/FSimZoo.jl)
 contains predefined environments and controllers for [FlightSims.jl](https://github.com/JinraeKim/FlightSims.jl).
 
+## Breaking changes in v0.11
+See `NEWS.md`.
+
 ## Examples
 - Examples include
 
@@ -77,4 +80,3 @@ contains predefined environments and controllers for [FlightSims.jl](https://git
 
 ## Utilities
 - `ned2enu` and `enu2ned`: coordinate transformation
-
