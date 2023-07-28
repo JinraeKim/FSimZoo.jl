@@ -9,6 +9,7 @@ using ForwardDiff
 using MatrixEquations
 using LinearAlgebra
 using Convex, ECOS
+using Rotations, Quaternions
 
 ## basics
 export TwoDimensionalNonlinearPolynomialSystem, LinearSystem, ReferenceModel, MultipleEnvs
@@ -36,6 +37,7 @@ export BacksteppingPositionController_StaticAllocator_Multicopter
 
 ## utils
 export ned2enu, enu2ned
+export euler2quat, quat2euler, dcm2euler, euler2dcm, quat2dcm, dcm2quat
 
 
 include("environments/environments.jl")
