@@ -42,7 +42,7 @@ function innerloop()
     _b_3_d_ddot = t -> ForwardDiff.derivative(_b_3_d_dot, t)
 
     t = 0.0
-    R = quat2dcm(R)
+    R = quat2dcm(q)
     ν = Command(
                 controller, R, ω;
                 b_1_d=b_1_d(t),
