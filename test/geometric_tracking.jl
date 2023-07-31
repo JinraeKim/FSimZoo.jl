@@ -14,7 +14,7 @@ function main()
     controller = GeometricTrackingController(k_p=k_p, k_v=k_v, k_R=k_R, k_ω=k_ω)
     p_d = t -> [cos(t), sin(t), -t]
     b_1_d = t -> [1, 0, 0]
-    (; p, v, R, ω) = X0
+    (; p, v, q, ω) = X0
     v_d = t -> ForwardDiff.derivative(p_d, t)
     a_d = t -> ForwardDiff.derivative(v_d, t)
     a_d_dot = t -> ForwardDiff.derivative(a_d, t)
@@ -23,8 +23,9 @@ function main()
     b_1_d_ddot = t -> ForwardDiff.derivative(b_1_d_dot, t)
 
     t = 0.0
+    R = quat2dcm(q)
     ν = Command(
-                controller, p, v, R', ω;
+                controller, p, v, R, ω;
                 a=zeros(3),  # IT SHOULD BE ESTIMATED!
                 a_dot=zeros(3),  # IT SHOULD BE ESTIMATED!
                 p_d=p_d(t),
