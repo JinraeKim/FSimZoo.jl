@@ -33,7 +33,7 @@ function innerloop()
     (; J) = multicopter
     X0 = State(multicopter)()
     controller = InnerLoopGeometricTrackingController()
-    (; R, ω) = X0
+    (; q, ω) = X0
     b_1_d = t -> [cos(t), sin(t), 0]
     b_1_d_dot = t -> ForwardDiff.derivative(b_1_d, t)
     b_1_d_ddot = t -> ForwardDiff.derivative(b_1_d_dot, t)
@@ -42,6 +42,7 @@ function innerloop()
     _b_3_d_ddot = t -> ForwardDiff.derivative(_b_3_d_dot, t)
 
     t = 0.0
+    R = quat2dcm(R)
     ν = Command(
                 controller, R, ω;
                 b_1_d=b_1_d(t),
