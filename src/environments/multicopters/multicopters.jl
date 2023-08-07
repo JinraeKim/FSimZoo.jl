@@ -3,11 +3,9 @@ abstract type Multicopter <: AbstractEnv end
 
 """
 Common state structure of Multicopter.
-`State(multicopter::Multicopter)` now receives `η` (Euler angles, η=[roll, pitch, yaw]) instead of rotation matrix.
 """
 function State(multicopter::Multicopter)
-    return function (p=zeros(3), v=zeros(3), η=zeros(3), ω=zeros(3))
-        q = euler2quat(η)
+    return function (p=zeros(3), v=zeros(3), q=[1, 0, 0, 0], ω=zeros(3))
         ComponentArray(p=p, v=v, q=q, ω=ω)
     end
 end
@@ -90,7 +88,7 @@ function __Dynamics!(multicopter::Multicopter)
         R = quat2dcm(q)
         dX.p = v
         dX.v = -(1/m)*f*R*e3 + g*e3 - R*D*R'*v
-        qω_dot = attitude_dynamics(vcat(q, ω); M, J)
+        qω_dot = attitude_dynamics(multicopter, vcat(q, ω); M)
         dX.q = qω_dot[1:4]
         dX.ω = qω_dot[5:7]
     end
@@ -115,7 +113,8 @@ end
 """
 [1] MATLAB, https://kr.mathworks.com/help/aeroblks/6dofquaternion.html#mw_f692de78-a895-4edc-a4a7-118228165a58
 """
-function attitude_dynamics(qω; M, J)
+function attitude_dynamics(multicopter::Multicopter, qω; M)
+    (; J) = multicopter
     q = qω[1:4]
     ω = qω[5:7]
     Ω = skew(ω)
