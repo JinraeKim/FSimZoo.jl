@@ -38,18 +38,6 @@ end
 
 
 """
-q1, q2: vectors with length of 4 (quaternions)
-q: the resulting array (q = [s, v1, v2, v3])
-"""
-function quaternion_product(q1, q2)
-    _q1 = Quaternions.quat(q1...)
-    _q2 = Quaternions.quat(q2...)
-    _q = _q1 * _q2
-    return [_q.s, _q.v1, _q.v2, _q.v3]
-end
-
-
-"""
 # Variables
 ## State
 p ∈ ℝ^3: (inertial) position
@@ -79,7 +67,6 @@ This is for compatibility with Rotations.jl (rotation matrix from I to B frames)
 """
 function __Dynamics!(multicopter::Multicopter)
     (; m, g, J, D) = multicopter
-    J_inv = inv(J)
     @Loggable function dynamics!(dX, X, p, t; f, M)
         e3 = [0, 0, 1]
         (; p, v, q, ω) = X
@@ -88,9 +75,8 @@ function __Dynamics!(multicopter::Multicopter)
         R = quat2dcm(q)
         dX.p = v
         dX.v = -(1/m)*f*R*e3 + g*e3 - R*D*R'*v
-        qω_dot = attitude_dynamics(multicopter, vcat(q, ω); M)
-        dX.q = qω_dot[1:4]
-        dX.ω = qω_dot[5:7]
+        dX.q = unit_quaternion_dynamics(q; ω)
+        dX.ω = angular_rate_dynamics(ω; J, M)
     end
 end
 
@@ -113,17 +99,22 @@ end
 """
 [1] MATLAB, https://kr.mathworks.com/help/aeroblks/6dofquaternion.html#mw_f692de78-a895-4edc-a4a7-118228165a58
 """
-function attitude_dynamics(multicopter::Multicopter, qω; M)
-    (; J) = multicopter
-    q = qω[1:4]
-    ω = qω[5:7]
-    Ω = skew(ω)
-    q_dot = 0.5 * quaternion_product(q, [0, ω...])
+function unit_quaternion_dynamics(q; ω)
+    q_s, q_v = q[1], q[2:4]
+    _ω_s, _ω_v = 0, ω
+    q_ω_s = q_s*_ω_s - dot(q_v, _ω_v)
+    q_ω_v = q_s*_ω_v + _ω_s*q_v + cross(q_v, _ω_v)
+    q_ω = [q_ω_s, q_ω_v...]
+    q_dot = 0.5 * q_ω
     k = 1
     eps = 1 - sum(q .^ 2)
     q_dot = q_dot + k*eps*q
+end
+
+
+function angular_rate_dynamics(ω; J, M)
+    Ω = skew(ω)
     ω_dot = inv(J) * (-Ω*J*ω + M)
-    vcat(q_dot, ω_dot)
 end
 
 
