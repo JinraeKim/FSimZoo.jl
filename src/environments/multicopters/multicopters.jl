@@ -37,6 +37,68 @@ function skew(x)
 end
 
 
+struct EulerAngleAttitude <: AbstractEnv
+end
+
+
+function State(env::EulerAngleAttitude)
+    """
+    η = [ϕ, θ, ψ], ZYX rotation (i.e., DCM = R_X(ϕ)R_Y(θ)R_Z(ψ))
+    """
+    function (η=zeros(3))
+        η
+    end
+end
+
+
+function Dynamics!(env::EulerAngleAttitude)
+    @Loggable function dynamics!(dη, η, param, t; ω)
+        @log η, ω
+        dη .= euler_angle_dynamics(η; ω)
+    end
+end
+
+
+function euler_angle_dynamics(η; ω)
+    ϕ, θ, ψ = η
+    H = [
+         1 sin(ϕ)*tan(θ) cos(ϕ)*tan(θ);
+         0 cos(ϕ) -sin(ϕ);
+         0 sin(ϕ)/cos(θ) cos(ϕ)/cos(θ);
+        ]
+    dη = H * ω
+end
+
+
+"""
+[1] MATLAB, https://kr.mathworks.com/help/aeroblks/6dofquaternion.html#mw_f692de78-a895-4edc-a4a7-118228165a58
+"""
+function unit_quaternion_dynamics(q; ω)
+    q_s, q_v = q[1], q[2:4]
+    _ω_s, _ω_v = 0, ω
+    q_ω_s = q_s*_ω_s - dot(q_v, _ω_v)
+    q_ω_v = q_s*_ω_v + _ω_s*q_v + cross(q_v, _ω_v)
+    q_ω = [q_ω_s, q_ω_v...]
+    q_dot = 0.5 * q_ω
+    k = 1
+    eps = 1 - sum(q .^ 2)
+    q_dot = q_dot + k*eps*q
+end
+
+
+function angular_velocity_dynamics(ω; J, M)
+    Ω = skew(ω)
+    ω_dot = inv(J) * (-Ω*J*ω + M)
+end
+
+
+function rotational_dynamics(q, ω; J, M)
+    dq = unit_quaternion_dynamics(q; ω)
+    dω = angular_velocity_dynamics(ω; J, M)
+    vcat(dq, dω)
+end
+
+
 """
 # Variables
 ## State
@@ -51,7 +113,7 @@ For example, x̂_I = R'*[1, 0, 0] where x̂_I is the x-axis of B-frame read in I
 
 ## (Virtual) input
 f ∈ ℝ: total thrust
-M ∈ ℝ^3: moment
+M ∈ ℝ^3: torque
 
 ## Parameters
 D denotes the drag coefficient matrix [2].
@@ -75,8 +137,9 @@ function __Dynamics!(multicopter::Multicopter)
         R = quat2dcm(q)
         dX.p = v
         dX.v = -(1/m)*f*R*e3 + g*e3 - R*D*R'*v
-        dX.q = unit_quaternion_dynamics(q; ω)
-        dX.ω = angular_rate_dynamics(ω; J, M)
+        dqdω = rotational_dynamics(q, ω; J, M)
+        dX.q = dqdω[1:4]
+        dX.ω = dqdω[5:7]
     end
 end
 
@@ -93,28 +156,6 @@ function _Dynamics!(multicopter::Multicopter)
         f, M = ν[1], ν[2:4]
         @nested_log __Dynamics!(multicopter)(dx, x, (), t; f=f, M=M)
     end
-end
-
-
-"""
-[1] MATLAB, https://kr.mathworks.com/help/aeroblks/6dofquaternion.html#mw_f692de78-a895-4edc-a4a7-118228165a58
-"""
-function unit_quaternion_dynamics(q; ω)
-    q_s, q_v = q[1], q[2:4]
-    _ω_s, _ω_v = 0, ω
-    q_ω_s = q_s*_ω_s - dot(q_v, _ω_v)
-    q_ω_v = q_s*_ω_v + _ω_s*q_v + cross(q_v, _ω_v)
-    q_ω = [q_ω_s, q_ω_v...]
-    q_dot = 0.5 * q_ω
-    k = 1
-    eps = 1 - sum(q .^ 2)
-    q_dot = q_dot + k*eps*q
-end
-
-
-function angular_rate_dynamics(ω; J, M)
-    Ω = skew(ω)
-    ω_dot = inv(J) * (-Ω*J*ω + M)
 end
 
 
