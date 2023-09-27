@@ -48,6 +48,7 @@ function FSimBase.Dynamics!(controller::InnerLoopGeometricTrackingController)
         @log z2_f
         @log z1_f_dot
         @log z2_f_dot
+        @log f
         dX.z1_f = ω_n_f * z2_f
         dX.z2_f = -2*ζ_f*ω_n_f*z2_f - ω_n_f*(z1_f-f)
         dX.z1_f_dot = ω_n_f_dot * z2_f_dot

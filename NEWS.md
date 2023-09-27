@@ -1,3 +1,7 @@
+### Changes in v0.11
+- The state variable of multicopter has changed from DCM to unit quaternion.
+- Conversion to other rotation representations are now supported (e.g., `quat2dcm`, `dcm2euler`, `euler2quat`, etc.).
+
 # Changes in v0.4.0
 - `GeometricTrackingController` is added for multicopter position/attitude tracking control.
 - Dependency `UnPack` is removed.

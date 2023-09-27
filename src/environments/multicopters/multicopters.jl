@@ -2,11 +2,11 @@
 abstract type Multicopter <: AbstractEnv end
 
 """
-Common state structure of Multicopter
+Common state structure of Multicopter.
 """
 function State(multicopter::Multicopter)
-    return function (p=zeros(3), v=zeros(3), R=diagm(ones(3)), ω=zeros(3))
-        ComponentArray(p=p, v=v, R=R, ω=ω)
+    return function (p=zeros(3), v=zeros(3), q=[1, 0, 0, 0], ω=zeros(3))
+        ComponentArray(p=p, v=v, q=q, ω=ω)
     end
 end
 
@@ -28,6 +28,78 @@ end
 
 
 """
+skew(x): ℝ³ → ℝ⁹ such that x×y = skew(x)*y
+"""
+function skew(x)
+    [    0 -x[3]  x[2];
+      x[3]     0 -x[1];
+     -x[2]  x[1]    0]
+end
+
+
+struct EulerAngleAttitude <: AbstractEnv
+end
+
+
+function State(env::EulerAngleAttitude)
+    """
+    η = [ϕ, θ, ψ], ZYX rotation (i.e., DCM = R_X(ϕ)R_Y(θ)R_Z(ψ))
+    """
+    function (η=zeros(3))
+        η
+    end
+end
+
+
+function Dynamics!(env::EulerAngleAttitude)
+    @Loggable function dynamics!(dη, η, param, t; ω)
+        @log η, ω
+        dη .= euler_angle_dynamics(η; ω)
+    end
+end
+
+
+function euler_angle_dynamics(η; ω)
+    ϕ, θ, ψ = η
+    H = [
+         1 sin(ϕ)*tan(θ) cos(ϕ)*tan(θ);
+         0 cos(ϕ) -sin(ϕ);
+         0 sin(ϕ)/cos(θ) cos(ϕ)/cos(θ);
+        ]
+    dη = H * ω
+end
+
+
+"""
+[1] MATLAB, https://kr.mathworks.com/help/aeroblks/6dofquaternion.html#mw_f692de78-a895-4edc-a4a7-118228165a58
+"""
+function unit_quaternion_dynamics(q; ω)
+    q_s, q_v = q[1], q[2:4]
+    _ω_s, _ω_v = 0, ω
+    q_ω_s = q_s*_ω_s - dot(q_v, _ω_v)
+    q_ω_v = q_s*_ω_v + _ω_s*q_v + cross(q_v, _ω_v)
+    q_ω = [q_ω_s, q_ω_v...]
+    q_dot = 0.5 * q_ω
+    k = 1
+    eps = 1 - sum(q .^ 2)
+    q_dot = q_dot + k*eps*q
+end
+
+
+function angular_velocity_dynamics(ω; J, M)
+    Ω = skew(ω)
+    ω_dot = inv(J) * (-Ω*J*ω + M)
+end
+
+
+function rotational_dynamics(q, ω; J, M)
+    dq = unit_quaternion_dynamics(q; ω)
+    dω = angular_velocity_dynamics(ω; J, M)
+    vcat(dq, dω)
+end
+
+
+"""
 # Variables
 ## State
 p ∈ ℝ^3: (inertial) position
@@ -41,15 +113,15 @@ For example, x̂_I = R'*[1, 0, 0] where x̂_I is the x-axis of B-frame read in I
 
 ## (Virtual) input
 f ∈ ℝ: total thrust
-M ∈ ℝ^3: moment
+M ∈ ℝ^3: torque
 
 ## Parameters
 D denotes the drag coefficient matrix [2].
 
 ## BE CAREFUL
-The definition of DCM, R, is the transpose of the DCM introduced in [1].
-It is because many packages including `ReferenceFrameRotations.jl` follows the definition of
-"DCM such that v_B = R*v_I".
+1) The default state is changed to unit quaternion from rotation matrix.
+2) The definition of rotation matrix (`R`) is now the same as the DCM introduced in [1] (it was the DCM's transpose until v0.10).
+This is for compatibility with Rotations.jl (rotation matrix from I to B frames).
 
 # Reference
 [1] T. Lee, M. Leok, and N. H. McClamroch, “Geometric Tracking Control of a Quadrotor UAV on SE(3),” in 49th IEEE Conference on Decision and Control (CDC), Atlanta, GA, Dec. 2010, pp. 5420–5425. doi: 10.1109/CDC.2010.5717652.
@@ -57,27 +129,23 @@ It is because many packages including `ReferenceFrameRotations.jl` follows the d
 """
 function __Dynamics!(multicopter::Multicopter)
     (; m, g, J, D) = multicopter
-    J_inv = inv(J)
-    e3 = [0, 0, 1]
-    # skew(x): ℝ³ → ℝ⁹ such that x×y = skew(x)*y
-    skew(x) = [    0 -x[3]  x[2];
-                x[3]     0 -x[1];
-               -x[2]  x[1]    0]
     @Loggable function dynamics!(dX, X, p, t; f, M)
-        (; p, v, R, ω) = X
+        e3 = [0, 0, 1]
+        (; p, v, q, ω) = X
         @onlylog state = X
         @nested_log :input f, M
-        Ω = skew(ω)
+        R = quat2dcm(q)
         dX.p = v
-        dX.v = -(1/m)*f*R'*e3 + g*e3 - R'*D*R*v
-        dX.R = -Ω*R
-        dX.ω = J_inv * (-Ω*J*ω + M)
+        dX.v = -(1/m)*f*R*e3 + g*e3 - R*D*R'*v
+        dqdω = rotational_dynamics(q, ω; J, M)
+        dX.q = dqdω[1:4]
+        dX.ω = dqdω[5:7]
     end
 end
 
 """
 A basic example of dynamics for multicopter considering rotor inputs `u`.
-You can use the following closure or extend the abvoe __Dynamics! for more general
+You can use the following closure or extend the above __Dynamics! for more general
 models, e.g., faulted multicopters.
 """
 function _Dynamics!(multicopter::Multicopter)
