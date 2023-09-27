@@ -28,9 +28,10 @@ function Dynamics!(env::BacksteppingPositionController_StaticAllocator_Multicopt
     (; controller, allocator, multicopter) = env
     (; m, J, g) = multicopter
     @Loggable function dynamics!(dx, x, params, t; pos_cmd=nothing)
-        (; p, v, R, ω) = x.multicopter
+        (; p, v, q, ω) = x.multicopter
         (; ref_model, Td) = x.controller
         xd, vd, ad, ȧd, äd = ref_model.x_0, ref_model.x_1, ref_model.x_2, ref_model.x_3, ref_model.x_4
+        R = quat2dcm(q)
         νd, Ṫd, _... = Command(controller)(
                                            p, v, R, ω,
                                            xd, vd, ad, ȧd, äd, Td,
