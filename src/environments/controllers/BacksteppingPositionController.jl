@@ -106,31 +106,31 @@ function Command(controller::BacksteppingPositionController)
         # u1
         g_vec = [0, 0, g]
         u1 = m*(ad - g_vec) + Kp*ep
-        zB = R' * [0, 0, 1]
+        zB = R * [0, 0, 1]
         td = -Td * zB
         et = u1 - td
         ėp = Ap*ep + Bp*et
         u̇1 = m*ȧd + Kp*ėp
         T = Td  # TODO: no lag
         # u2
-        u2 = T_u_inv(T) * R * (2*Bp' * P * ep + u̇1 + Kt*et)
+        u2 = T_u_inv(T) * R' * (2*Bp' * P * ep + u̇1 + Kt*et)
         Ṫd = u2[end]  # third element
         Ṫ = Ṫd  # TODO: no lag
-        żB = -R' * T_ω(1.0) * ω
+        żB = -R * T_ω(1.0) * ω
         ėt = u̇1 + u2[end]*zB + Td*żB
         ëp = Ap*ėp + Bp*ėt
         ü1 = m*äd + Kp*ëp
-        Ṙ = -skew(ω) * R
+        Ṙ = -skew(ω) * R'
         u̇2 = (
-              (T_u_inv_dot(T, Ṫ)*R + T_u_inv(T)*Ṙ) * (2*Bp'*P*ep + u̇1 + Kt*et)
-              + T_u_inv(T) * R * (2*Bp'*P*ėp + ü1 + Kt*ėt)
+              (T_u_inv_dot(T, Ṫ)*R' + T_u_inv(T)*Ṙ) * (2*Bp'*P*ep + u̇1 + Kt*et)
+              + T_u_inv(T) * R' * (2*Bp'*P*ėp + ü1 + Kt*ėt)
              )
         ω̇d = [1 0 0;
               0 1 0;
               0 0 0] * u̇2
         ωd = [u2[1:2]..., 0]
         eω = ωd - ω
-        Md = cross(ω, J*ω) + J*(T_ω(T)'*R*et + ω̇d + Kω*eω)
+        Md = cross(ω, J*ω) + J*(T_ω(T)'*R'*et + ω̇d + Kω*eω)
         νd = vcat(Td, Md)
         e = [ep;
              et;
