@@ -217,13 +217,12 @@ R is defined as the rotation matrix in [1, Eqs.(3), (4)].
 Please check if it is the transpose of the rotation matrix defined in FSimZoo multicopters.
 
 # Notes
-When obtaining R_d_dot and ω_d_dot,
-one may need to obtain the derivative of b_3_d, which contains e_v.
-This implies that we need to obtain acceleration (a=v_dot)
-to get the control input f (total thrust),
-but the acceleration is induced by f, which results in algebraic loop.
+When implementing geometric controller, you need to access the acceleration and jerk,
+which requires the knowledge of dynamics.
+In general, it may be inaccurate.
+Instead, here, I implemented geometric controller with observers (filters) to estimate them.
 
-Therefore, the a_d and higher-order derivatives are obtained from derivative filters.
+For the ideal case, see `Command_Ideal(controller::GeometricTrackingController, args...; kwargs...)`.
 """
 function Command(
         controller::GeometricTrackingController, p, v, R, ω;
@@ -268,4 +267,64 @@ function Command(
     f = dot(_b_3_d, R*e_3)
     M = -k_R*e_R - k_ω*e_ω + cross(ω, J*ω) - J*(_hat(ω) * R' * R_d * ω_d - R' * R_d * ω_d_dot)
     ν = [f, M...]
+end
+
+
+"""
+R is defined as the rotation matrix in [1, Eqs.(3), (4)].
+Please check if it is the transpose of the rotation matrix defined in FSimZoo multicopters.
+
+This assumes that you know the exact equations of motion to get the acceleration `a` and jerk `a_dot`.
+For more realistic situations, see `Command(controller::GeometricTrackingController, args...; kwargs...)`.
+"""
+function Command_Ideal(
+        controller::GeometricTrackingController, p, v, R, ω;
+        p_d, v_d, a_d, a_d_dot, a_d_ddot,
+        b_1_d, b_1_d_dot, b_1_d_ddot,
+        m, g, J,
+    )
+    (; k_p, k_v, k_R, k_ω) = controller
+    e_3 = [0, 0, 1]
+    ω_hat = _hat(ω)
+    R_dot = R*ω_hat  # kinematics; available
+
+    e_p = p - p_d
+    e_v = v - v_d
+    _b_3_d = -(-k_p*e_p - k_v*e_v - m*g*e_3 + m*a_d)
+    f = dot(_b_3_d, R*e_3)
+
+    a = g*e_3 - (1/m)*f*(R*e_3)  # assumption: we know the dynamics
+    e_a = a - a_d
+    _b_3_d_dot = -(-k_p*e_v - k_v*e_a + m*a_d_dot)
+    f_dot = dot(_b_3_d_dot, R*e_3) + dot(_b_3_d, R_dot*e_3)
+
+    a_dot = -(1/m) * (f_dot * R*e_3 + f * R_dot*e_3)
+    e_a_dot = a_dot - a_d_dot
+
+    _b_3_d_ddot = -(-k_p*e_a - k_v*e_a_dot + m*a_d_ddot)
+    b_3_d = _b_3_d / norm(_b_3_d)
+    b_3_d_dot = _unit_vector_dot(_b_3_d, _b_3_d_dot)
+    b_3_d_ddot = _unit_vector_ddot(_b_3_d, _b_3_d_dot, _b_3_d_ddot)
+
+    _b_2_d = cross(b_3_d, b_1_d)
+    _b_2_d_dot = cross(b_3_d_dot, b_1_d) + cross(b_3_d, b_1_d_dot)
+    _b_2_d_ddot = cross(b_3_d_ddot, b_1_d) + cross(b_3_d_dot, b_1_d_dot) + cross(b_3_d, b_1_d_ddot)
+    b_2_d = _b_2_d / norm(_b_2_d)
+    b_2_d_dot = _unit_vector_dot(_b_2_d, _b_2_d_dot)
+    b_2_d_ddot = _unit_vector_ddot(_b_2_d, _b_2_d_dot, _b_2_d_ddot)
+
+    R_d = [cross(b_2_d, b_3_d)  b_2_d  b_3_d]
+    R_d_dot = [(cross(b_2_d_dot, b_3_d) + cross(b_2_d, b_3_d_dot)) b_2_d_dot b_3_d_dot]
+    R_d_ddot = [(cross(b_2_d_ddot, b_3_d) + cross(b_2_d_dot, b_3_d_dot) + cross(b_2_d, b_3_d_ddot)) b_2_d_ddot b_3_d_ddot]
+    ω_d_hat = R_d' * R_d_dot  # guessed from the equation between [1, Eq. (10)] and [1, Eq. (11)].
+    ω_d = _vee(ω_d_hat)
+    ω_d_dot_hat = R_d_dot' * R_d_dot + R_d' * R_d_ddot
+    ω_d_dot = _vee(ω_d_dot_hat)
+
+    e_R = 0.5 * _vee(R_d'*R - R'*R_d)
+    e_ω = ω - R'*R_d*ω_d
+
+    M = -k_R*e_R - k_ω*e_ω + cross(ω, J*ω) - J*(_hat(ω) * R' * R_d * ω_d - R' * R_d * ω_d_dot)
+    ν = [f, M...]
+    return ν
 end
