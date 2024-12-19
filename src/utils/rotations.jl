@@ -1,3 +1,4 @@
+# 3D rotation
 """
 Euler angle to unit quaternion, corresponding to ZYX rotation (here, RotXYZ).
 η = [roll, pitch, yaw]
@@ -35,4 +36,14 @@ end
 function dcm2quat(R)
     tmp = QuatRotation(RotMatrix{3}(R)).q
     q = [tmp.s, tmp.v1, tmp.v2, tmp.v3]
+end
+
+
+# 2D rotation
+function angle2rotmatrix2d(θ)
+    mat = [
+        cos(θ) -sin(θ);
+        sin(θ) cos(θ)
+    ]
+    return mat
 end
