@@ -11,6 +11,9 @@ include("fixedwings/fixedwings.jl")
 ## Multicopters
 include("multicopters/multicopters.jl")
 
+## VTOLs
+include("vtols/vtols.jl")
+
 ## Missiles
 include("missiles/missiles.jl")
 

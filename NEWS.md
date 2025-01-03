@@ -1,4 +1,7 @@
-### Changes in v0.11
+# Changes in v0.12
+- A VTOL aircraft, `LiftCruiseVTOL2D`, is added (https://arxiv.org/abs/2501.00739).
+
+# Changes in v0.11
 - The state variable of multicopter has changed from DCM to unit quaternion.
 - Conversion to other rotation representations are now supported (e.g., `quat2dcm`, `dcm2euler`, `euler2quat`, etc.).
 

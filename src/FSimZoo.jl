@@ -27,6 +27,8 @@ export AbstractWingRock, ElzebdaWingRock, TarnWingRock
 export Multicopter
 export Quadcopter, IslamQuadcopter, GoodarziQuadcopter, LeeQuadcopter, GoodarziAgileQuadcopter
 export Hexacopter, LeeHexacopter
+## vtols (VTOLs)
+export LiftCruiseVTOL2D
 ## missiles
 export MissileLongitudinal
 # control allocator
@@ -38,6 +40,7 @@ export BacksteppingPositionController_StaticAllocator_Multicopter
 ## utils
 export ned2enu, enu2ned
 export euler2quat, quat2euler, dcm2euler, euler2dcm, quat2dcm, dcm2quat
+export angle2rotmatrix2d
 
 
 include("environments/environments.jl")
