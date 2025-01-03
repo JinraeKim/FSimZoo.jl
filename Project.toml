@@ -1,7 +1,7 @@
 name = "FSimZoo"
 uuid = "e2d5807d-1594-43f7-91a6-54c6eef5a9d2"
 authors = ["JinraeKim <kjl950403@gmail.com> and contributors"]
-version = "0.12.0"
+version = "0.12.1"
 
 [deps]
 ComponentArrays = "b0b7db55-cfe3-40fc-9ded-d10e2dbeff66"
@@ -15,15 +15,15 @@ Quaternions = "94ee1d12-ae83-5a48-8b1c-48b8ff168ae0"
 Rotations = "6038ab10-8711-5258-84ad-4b1120ba62dc"
 
 [compat]
-ComponentArrays = "0.13"
-Convex = "0.15"
+ComponentArrays = "0.15"
+Convex = "0.16"
 ECOS = "1.1"
 FSimBase = "0.2"
 ForwardDiff = "0.10"
-MatrixEquations = "2.1"
+MatrixEquations = "2.4"
 julia = "1"
 Quaternions = "0.7"
-Rotations = "1.5"
+Rotations = "1.7"
 
 [extras]
 OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"

@@ -30,11 +30,11 @@ u_nom: nominal control input, in R^m
 """
 function Command(
         cbf::InputAffinePositionCBF, u, p, v, u_nom, constraints;
-        solver=ECOS.Optimizer, silent_solver=true,
+        solver=ECOS.Optimizer, silent=true,
     )
     cbf_constraint = generate_constraint(cbf, p, v, u)
     constraints = [constraints..., cbf_constraint]
     problem = minimize(sumsquares(u - u_nom), constraints)
-    solve!(problem, solver; silent_solver=silent_solver)
+    solve!(problem, solver; silent)
     return reshape(u.value, size(u_nom)...)
 end
