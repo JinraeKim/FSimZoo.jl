@@ -2,7 +2,7 @@
 [FSimZoo.jl](https://github.com/JinraeKim/FSimZoo.jl)
 contains predefined environments and controllers for [FlightSims.jl](https://github.com/JinraeKim/FlightSims.jl).
 
-## Breaking changes in v0.11
+## Version update
 See `NEWS.md`.
 
 ## Examples
