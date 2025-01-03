@@ -37,6 +37,15 @@ See `NEWS.md`.
     </details>
 
     <details>
+
+    <summary>VTOL</summary>
+
+    - (2D VTOL model) `LiftCruiseVTOL2D`
+
+    </details>
+
+
+    <details>
     <summary>multicopters</summary>
 
     - (Hexacopter) `LeeHexacopter`, `LeeQuadcopter`, `GoodarziAgileQuadcopter` (**currently maintained**)
